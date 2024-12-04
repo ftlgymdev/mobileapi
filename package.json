@@ -1,0 +1,23 @@
+{
+  "name": "ftlgymmobileapi",
+  "version": "1.0.0",
+  "description": "API for FTLGym Mobile Apps",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "PT. Lebih Cepat Lebih Cahaya",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.1",
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.0.1",
+    "express": "^4.21.1",
+    "prisma": "^6.0.1"
+  }
+}
