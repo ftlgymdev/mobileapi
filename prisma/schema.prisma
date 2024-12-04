@@ -1,0 +1,253 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              BigInt         @id @default(autoincrement())
+  name            String?        @db.VarChar(255)
+  email           String         @unique @db.VarChar(255)
+  isEmailVerified Boolean        @default(false)
+  role            UserRole       @default(USER)
+  password        String
+  about           String?
+  degreeId        BigInt?
+  school          String?
+  industryId      BigInt?
+  occupationId    BigInt?
+  domicile        String?
+  height          Float?
+  zodiacId        BigInt?
+  bloodTypeId     BigInt?
+  lookingForId    BigInt?
+  petId           BigInt?
+  exerciseId      BigInt?
+  smokingHabitId  BigInt?
+  drinkingHabitId BigInt?
+  offDayId        BigInt?
+  dietId          BigInt?
+  foodId          BigInt?
+  musicId         BigInt?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  photos          Photo[]
+  subscriptions   Subscription[]
+  tokens          Token[]
+  bloodType       BloodType?     @relation(fields: [bloodTypeId], references: [id])
+  degree          Degree?        @relation(fields: [degreeId], references: [id])
+  diet            Diet?          @relation(fields: [dietId], references: [id])
+  drinkingHabit   DrinkingHabit? @relation(fields: [drinkingHabitId], references: [id])
+  exercise        Exercise?      @relation(fields: [exerciseId], references: [id])
+  food            Food?          @relation(fields: [foodId], references: [id])
+  industry        Industry?      @relation(fields: [industryId], references: [id])
+  lookingFor      LookingFor?    @relation(fields: [lookingForId], references: [id])
+  music           Music?         @relation(fields: [musicId], references: [id])
+  occupation      Occupation?    @relation(fields: [occupationId], references: [id])
+  offDay          OffDay?        @relation(fields: [offDayId], references: [id])
+  pet             Pet?           @relation(fields: [petId], references: [id])
+  smokingHabit    SmokingHabit?  @relation(fields: [smokingHabitId], references: [id])
+  zodiac          Zodiac?        @relation(fields: [zodiacId], references: [id])
+  userLanguages   UserLanguage[]
+  userSports      UserSport[]
+}
+
+model Degree {
+  id        BigInt   @id @default(autoincrement())
+  name      String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+}
+
+model Industry {
+  id        BigInt   @id @default(autoincrement())
+  name      String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+}
+
+model Occupation {
+  id        BigInt   @id @default(autoincrement())
+  name      String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+}
+
+model Zodiac {
+  id        BigInt   @id @default(autoincrement())
+  name      String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+}
+
+model BloodType {
+  id        BigInt   @id @default(autoincrement())
+  type      String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+}
+
+model LookingFor {
+  id          BigInt   @id @default(autoincrement())
+  description String   @unique @db.VarChar(255)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  users       User[]
+}
+
+model Pet {
+  id        BigInt   @id @default(autoincrement())
+  type      String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+}
+
+model Exercise {
+  id          BigInt   @id @default(autoincrement())
+  description String   @unique @db.VarChar(255)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  users       User[]
+}
+
+model SmokingHabit {
+  id          BigInt   @id @default(autoincrement())
+  description String   @unique @db.VarChar(255)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  users       User[]
+}
+
+model DrinkingHabit {
+  id          BigInt   @id @default(autoincrement())
+  description String   @unique @db.VarChar(255)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  users       User[]
+}
+
+model OffDay {
+  id          BigInt   @id @default(autoincrement())
+  description String   @unique @db.VarChar(255)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  users       User[]
+}
+
+model Diet {
+  id          BigInt   @id @default(autoincrement())
+  description String   @unique @db.VarChar(255)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  users       User[]
+}
+
+model Food {
+  id          BigInt   @id @default(autoincrement())
+  description String   @unique @db.VarChar(255)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  users       User[]
+}
+
+model Music {
+  id        BigInt   @id @default(autoincrement())
+  genre     String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+}
+
+model Token {
+  id          BigInt    @id @default(autoincrement())
+  token       String    @db.VarChar(255)
+  type        TokenType
+  expires     DateTime
+  blacklisted Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  userId      BigInt
+  user        User      @relation(fields: [userId], references: [id])
+}
+
+model Photo {
+  id          BigInt   @id @default(autoincrement())
+  url         String   @db.VarChar(255)
+  description String?
+  createdAt   DateTime @default(now())
+  userId      BigInt
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model Sport {
+  id         BigInt      @id @default(autoincrement())
+  name       String      @unique @db.VarChar(255)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  userSports UserSport[]
+}
+
+model Language {
+  id            BigInt         @id @default(autoincrement())
+  name          String         @unique @db.VarChar(255)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  userLanguages UserLanguage[]
+}
+
+model UserSport {
+  userId  BigInt
+  sportId BigInt
+  sport   Sport  @relation(fields: [sportId], references: [id])
+  user    User   @relation(fields: [userId], references: [id])
+
+  @@id([userId, sportId])
+}
+
+model UserLanguage {
+  userId     BigInt
+  languageId BigInt
+  language   Language @relation(fields: [languageId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@id([userId, languageId])
+}
+
+model Subscription {
+  id        BigInt             @id @default(autoincrement())
+  userId    BigInt
+  plan      String             @db.VarChar(255)
+  startDate DateTime           @default(now())
+  endDate   DateTime?
+  status    SubscriptionStatus @default(ACTIVE)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  user      User               @relation(fields: [userId], references: [id])
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum TokenType {
+  ACCESS
+  REFRESH
+  RESET_PASSWORD
+  VERIFY_EMAIL
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELED
+  PENDING
+}
