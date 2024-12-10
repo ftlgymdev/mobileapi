@@ -8,11 +8,11 @@ datasource db {
 }
 
 model User {
-  id              BigInt         @id @default(autoincrement())
-  name            String?        @db.VarChar(255)
-  email           String         @unique @db.VarChar(255)
-  isEmailVerified Boolean        @default(false)
-  role            UserRole       @default(USER)
+  id              BigInt   @id @default(autoincrement())
+  name            String?  @db.VarChar(255)
+  email           String   @unique @db.VarChar(255)
+  isEmailVerified Boolean  @default(false)
+  role            UserRole @default(USER)
   password        String
   about           String?
   degreeId        BigInt?
@@ -32,141 +32,11 @@ model User {
   dietId          BigInt?
   foodId          BigInt?
   musicId         BigInt?
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  photos          Photo[]
-  subscriptions   Subscription[]
-  tokens          Token[]
-  bloodType       BloodType?     @relation(fields: [bloodTypeId], references: [id])
-  degree          Degree?        @relation(fields: [degreeId], references: [id])
-  diet            Diet?          @relation(fields: [dietId], references: [id])
-  drinkingHabit   DrinkingHabit? @relation(fields: [drinkingHabitId], references: [id])
-  exercise        Exercise?      @relation(fields: [exerciseId], references: [id])
-  food            Food?          @relation(fields: [foodId], references: [id])
-  industry        Industry?      @relation(fields: [industryId], references: [id])
-  lookingFor      LookingFor?    @relation(fields: [lookingForId], references: [id])
-  music           Music?         @relation(fields: [musicId], references: [id])
-  occupation      Occupation?    @relation(fields: [occupationId], references: [id])
-  offDay          OffDay?        @relation(fields: [offDayId], references: [id])
-  pet             Pet?           @relation(fields: [petId], references: [id])
-  smokingHabit    SmokingHabit?  @relation(fields: [smokingHabitId], references: [id])
-  zodiac          Zodiac?        @relation(fields: [zodiacId], references: [id])
-  userLanguages   UserLanguage[]
-  userSports      UserSport[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  @@map("member")
-}
-
-model Degree {
-  id        BigInt   @id @default(autoincrement())
-  name      String   @unique @db.VarChar(255)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  users     User[]
-}
-
-model Industry {
-  id        BigInt   @id @default(autoincrement())
-  name      String   @unique @db.VarChar(255)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  users     User[]
-}
-
-model Occupation {
-  id        BigInt   @id @default(autoincrement())
-  name      String   @unique @db.VarChar(255)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  users     User[]
-}
-
-model Zodiac {
-  id        BigInt   @id @default(autoincrement())
-  name      String   @unique @db.VarChar(255)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  users     User[]
-}
-
-model BloodType {
-  id        BigInt   @id @default(autoincrement())
-  type      String   @unique @db.VarChar(255)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  users     User[]
-}
-
-model LookingFor {
-  id          BigInt   @id @default(autoincrement())
-  description String   @unique @db.VarChar(255)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  users       User[]
-}
-
-model Pet {
-  id        BigInt   @id @default(autoincrement())
-  type      String   @unique @db.VarChar(255)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  users     User[]
-}
-
-model Exercise {
-  id          BigInt   @id @default(autoincrement())
-  description String   @unique @db.VarChar(255)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  users       User[]
-}
-
-model SmokingHabit {
-  id          BigInt   @id @default(autoincrement())
-  description String   @unique @db.VarChar(255)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  users       User[]
-}
-
-model DrinkingHabit {
-  id          BigInt   @id @default(autoincrement())
-  description String   @unique @db.VarChar(255)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  users       User[]
-}
-
-model OffDay {
-  id          BigInt   @id @default(autoincrement())
-  description String   @unique @db.VarChar(255)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  users       User[]
-}
-
-model Diet {
-  id          BigInt   @id @default(autoincrement())
-  description String   @unique @db.VarChar(255)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  users       User[]
-}
-
-model Food {
-  id          BigInt   @id @default(autoincrement())
-  description String   @unique @db.VarChar(255)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  users       User[]
-}
-
-model Music {
-  id        BigInt   @id @default(autoincrement())
-  genre     String   @unique @db.VarChar(255)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  users     User[]
+  Token        Token[]
+  UserLanguage UserLanguage[]
 }
 
 model Token {
@@ -180,38 +50,12 @@ model Token {
   user        User      @relation(fields: [userId], references: [id])
 }
 
-model Photo {
-  id          BigInt   @id @default(autoincrement())
-  url         String   @db.VarChar(255)
-  description String?
-  createdAt   DateTime @default(now())
-  userId      BigInt
-  user        User     @relation(fields: [userId], references: [id])
-}
-
-model Sport {
-  id         BigInt      @id @default(autoincrement())
-  name       String      @unique @db.VarChar(255)
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  userSports UserSport[]
-}
-
 model Language {
   id            BigInt         @id @default(autoincrement())
   name          String         @unique @db.VarChar(255)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   userLanguages UserLanguage[]
-}
-
-model UserSport {
-  userId  BigInt
-  sportId BigInt
-  sport   Sport  @relation(fields: [sportId], references: [id])
-  user    User   @relation(fields: [userId], references: [id])
-
-  @@id([userId, sportId])
 }
 
 model UserLanguage {
@@ -221,18 +65,6 @@ model UserLanguage {
   user       User     @relation(fields: [userId], references: [id])
 
   @@id([userId, languageId])
-}
-
-model Subscription {
-  id        BigInt             @id @default(autoincrement())
-  userId    BigInt
-  plan      String             @db.VarChar(255)
-  startDate DateTime           @default(now())
-  endDate   DateTime?
-  status    SubscriptionStatus @default(ACTIVE)
-  createdAt DateTime           @default(now())
-  updatedAt DateTime           @updatedAt
-  user      User               @relation(fields: [userId], references: [id])
 }
 
 //start api ftl
@@ -275,6 +107,262 @@ model Member {
   updated_at                  DateTime
 }
 
+model MemberPackage {
+  id                    BigInt
+  transaksi_id          BigInt
+  user_id               BigInt
+  member_id             BigInt
+  package_id            BigInt
+  personal_trainer_name String
+  status                Int
+  member_sharing_id     BigInt
+  member_br             BigInt
+  coupon_go             String
+  start_date            DateTime
+  expired_date          DateTime
+  value                 Decimal
+  created_at            DateTime
+  updated_at            DateTime
+
+  @@map("member_package")
+}
+
+model Transaction {
+  id             BigInt
+  transaksi_id   BigInt
+  type_transaksi Int
+  user_id        BigInt
+  member_id      BigInt
+  package_id     BigInt
+  club_id        Int
+  price          Decimal
+  status         Int
+  approve_status Int
+  approved_by    BigInt
+  approved_at    DateTime
+  created_at     DateTime
+  updated_by     BigInt
+  updated_at     DateTime
+  from_qios      Int
+}
+
+model Club {
+  id                BigInt
+  club_order        String
+  name              String
+  alias             String
+  max_class_pilates Int
+  club_opening_date DateTime
+  country_id        String
+  city_id           Int
+  state_id          Int
+  address           String
+  latitude          String
+  longtitude        String
+  postal_code       String
+  status            Int
+  created_at        DateTime
+  updated_at        DateTime
+  link_payment      String
+  doorid            BigInt
+  doorkey           String
+}
+
+model ClubCity {
+  id     BigInt
+  name   String
+  status Int
+}
+
+model RequestTransaksi {
+  id                  BigInt
+  created_by          BigInt
+  request_id          BigInt
+  member_id           BigInt
+  data_old            String
+  first_name          String
+  last_name           String
+  email               String
+  phone               String
+  address             String
+  relation_id         Int
+  start_date          DateTime
+  package             BigInt
+  card_member         String
+  personal_trainer    BigInt
+  medical_reason_type Int
+  freeze_duration_id  Int
+  cuti_date           DateTime
+  cuti_amount         Int
+  medical_amount      BigInt
+  nominal_refund      BigInt
+  note                String
+  status              Int
+  approve_status      Int
+  approve_status_2    BigInt
+  approve_status_3    BigInt
+  checked             Int
+  note_rejected       String
+  note_rejected_2     String
+  approved_by         BigInt
+  approved_by_2       BigInt
+  approved_by_3       BigInt
+  approved_at         DateTime
+  approved_at_2       DateTime
+  approved_at_3       DateTime
+  created_at          DateTime
+  updated_by          BigInt
+  updated_at          DateTime
+  external_id         String
+  status_paid         String
+  judul_permintaan    String
+  deskripsi           String
+}
+
+model Scedule {
+  id                         BigInt
+  classid                    BigInt
+  arrival                    DateTime
+  starttime                  DateTime
+  endtime                    DateTime
+  start_str                  DateTime
+  end_str                    DateTime
+  resourceid                 BigInt
+  location                   String
+  price                      BigInt
+  price_numeric              BigInt
+  spacesfree                 Int
+  seatallocation             Int
+  multiplebookings           String
+  minimum_age                Int
+  maximum_age                Int
+  age_min                    Int
+  age_max                    Int
+  max_waitinglist            Int
+  max_students               Int
+  bookingname                String
+  classname                  String
+  bookable                   Int
+  percentfull                Int
+  num_students               Int
+  already_booked_id          Int
+  already_booked_waitlist_id Int
+  staffname                  String
+  cancelfee                  BigInt
+  cancelbenefitloss          String
+  waitlist_count             Int
+  substitute_staff           String
+  staffid                    BigInt
+  bgcolour                   String
+  description                String
+  online_instruction         Int
+  informationlink            String
+  notes                      String
+  companyid                  BigInt
+  companyname                String
+  allow_skip_payment         Int
+  prospectonly               String
+  latebooking                String
+  prereq_questionnaireid     Int
+  sortorder                  Int
+  classtypeid                Int
+  classtypename              String
+  repeatfreq                 String
+  repeatend                  String
+  auto_enrollment            String
+  pre_discount_price         BigInt
+  startrow                   Int
+  true_starttime             DateTime
+  prevbid                    BigInt
+  prevbid_waitlist           String
+  current                    String
+  in_future                  String
+  NAME                       String
+  repeatend_iso              String
+  repeatend_str              String
+  arrival_iso                DateTime
+  arrival_str                String
+  single_guest_addonfee      String
+  multiple_guest_addonfee    String
+  layout                     String
+  description_html           String
+  image                      String
+  availability               String
+  dayofweek                  String
+  staffphoto                 String
+  salary                     BigInt
+  staffnamecover             String
+  staffphotocover            String
+  labelclass                 String
+  total_seat                 Int
+  booked_seat                Int
+  available_seat             Int
+  submit                     Int
+  status                     Int
+  created_at                 DateTime
+  updated_at                 DateTime
+  additionalstaffname        String
+  display_push               Int
+  display_clear              Int
+  check_in                   Int
+  max_member                 Int
+  max_non_member             Int
+}
+
+model ScheduleBlist {
+  bid                           Int
+  scheduleid                    BigInt
+  membershipid                  String
+  enquiryid                     String
+  repeat                        String
+  seat                          Int
+  notes                         String
+  webbooking                    Int
+  webip                         String
+  result                        Int
+  parentid                      Int
+  firstname                     String
+  surname                       String
+  checkin                       DateTime
+  price                         Decimal
+  rating                        String
+  feedback                      String
+  discount_code_id              String
+  memberid                      Int
+  birthday_today                String
+  medicalconditions             String
+  customdropdown2value          String
+  customboolean8                String
+  customtext1                   String
+  member_parentname             String
+  paid                          Int
+  fullname                      String
+  memberblank                   String
+  booking_name                  String
+  is_cancelling_membership      String
+  is_firsttime_attend_classtype String
+  bookings_attended             Int
+  highlighted_waivers           String
+  memberfile                    String
+  memberphoto                   String
+}
+
+model ScheduleClist {
+  id                BigInt
+  scheduleid        BigInt
+  repeat            String
+  notes             String
+  webbooking        Int
+  lastupdate        DateTime
+  memberid          Int
+  member_parentname String
+  fullname          String
+  memberblank       String
+  booking_name      String
+  memberfile        String
+  memberphoto       String
+}
+
 enum UserRole {
   USER
   ADMIN
@@ -285,11 +373,4 @@ enum TokenType {
   REFRESH
   RESET_PASSWORD
   VERIFY_EMAIL
-}
-
-enum SubscriptionStatus {
-  ACTIVE
-  EXPIRED
-  CANCELED
-  PENDING
 }
