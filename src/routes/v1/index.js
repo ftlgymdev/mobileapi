@@ -1,7 +1,10 @@
 const express = require('express');
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
+const testRoute = require('./test.route');
 const config = require('../../config/config');
+const profileRoute = require('./profile.route');
+
 
 const router = express.Router();
 
@@ -12,12 +15,20 @@ const defaultRoutes = [
   },
   {
     path: '/users',
-    route: userRoute
+    route: profileRoute
+  },
+  {
+    path: '/profile',
+    route: profileRoute
   }
 ];
 
+// routes available only in development mode
 const devRoutes = [
-  // routes available only in development mode
+  {
+    path: '/test',
+    route: testRoute
+  }
 ];
 
 defaultRoutes.forEach((route) => {

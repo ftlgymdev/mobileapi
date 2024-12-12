@@ -1,0 +1,1 @@
+DROP TABLE gymmmaster_token;

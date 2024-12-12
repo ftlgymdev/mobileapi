@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = env("PROVIDER")
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -231,6 +231,25 @@ model Subscription {
   createdAt DateTime           @default(now())
   updatedAt DateTime           @updatedAt
   user      User               @relation(fields: [userId], references: [id])
+}
+
+model GymMasterToken {
+  member_id  Int      @id
+  token      String
+  expires    BigInt
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("gymmmaster_token")
+}
+
+model DecryptPwd {
+  member_id  Int      @id
+  password   String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("decrypt_pwd")
 }
 
 enum UserRole {
