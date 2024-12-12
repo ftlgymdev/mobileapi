@@ -4,6 +4,8 @@ const { TokenType } = require('@prisma/client');
 const prisma = require('../client');
 const { encryptPassword, isPasswordMatch } = require('../utils/encryption');
 const exclude = require('../utils/exclude');
+const ApiError = require('../utils/ApiError');
+const gymMasterApiService = require('./gymMasterApi.service');
 
 /**
  * Login with username and password
@@ -12,6 +14,7 @@ const exclude = require('../utils/exclude');
  * @returns {Promise<Omit<User, 'password'>>}
  */
 const loginUserWithEmailAndPassword = async (email, password) => {
+  await gymMasterApiService.login({ email: email, password: password });
   const user = await userService.getUserByEmail(email, [
     'id',
     'email',
@@ -22,6 +25,8 @@ const loginUserWithEmailAndPassword = async (email, password) => {
     'createdAt',
     'updatedAt'
   ]);
+  const encryptedPassword = await encryptPassword(password);
+  await userService.updateUserById(user.id, { password: encryptedPassword });
   if (!user || !(await isPasswordMatch(password, user.password))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
   }
@@ -101,6 +106,7 @@ const verifyEmail = async (verifyEmailToken) => {
     await prisma.token.deleteMany({
       where: { userId: verifyEmailTokenData.userId, type: TokenType.VERIFY_EMAIL }
     });
+
     await userService.updateUserById(verifyEmailTokenData.userId, { isEmailVerified: true });
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Email verification failed');

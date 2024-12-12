@@ -10,10 +10,10 @@ const ApiError = require('../utils/ApiError');
  * @param {string} token
  * @returns {Promise<GymMasterToken>}
  */
-const createToken = async (memberId, token) => {
+const createToken = async (memberId, token, expires) => {
     const existingToken = await getTokenByMemberId(memberId);
     if (existingToken) {
-        throw new ApiError(httpStatus.BAD_REQUEST, 'Token already exists for this member');
+        await deleteTokenByMemberId(memberId);
     }
     return prisma.gymMasterToken.create({
         data: {
@@ -68,7 +68,6 @@ const login = async (params) => {
     }
     try {
         const response = await axios.post(`${process.env.GYMMASTER_BASE_URL}/portal/api/v1/login`, data);
-        console.log('response', response)
         if (response.data.result && response.data.result.token) {
             const memberId = response.data.result.memberid;
             const token = response.data.result.token;
@@ -79,8 +78,7 @@ const login = async (params) => {
             throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to retrieve token from GymMaster API');
         }
     } catch (error) {
-        console.error('Login request failed:', error.message);
-        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Login request failed');
+        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error);
     }
 };
 
@@ -124,6 +122,19 @@ const get = async (endpoint, data = {}) => {
     }
 };
 
+/**
+ * Delete user by id
+ * @param {ObjectId} userId
+ * @returns {Promise<User>}
+ */
+const deleteTokenByMemberId = async (memberId) => {
+    const token = await getTokenByMemberId(memberId);
+    if (token) {
+        await prisma.gymMasterToken.delete({ where: { member_id: token.member_id } });
+    }
+    return token;
+};
+
 module.exports = {
     createToken,
     getTokenByMemberId,
@@ -131,5 +142,6 @@ module.exports = {
     login,
     getToken,
     post,
-    get
+    get,
+    deleteTokenByMemberId
 };

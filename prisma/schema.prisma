@@ -239,14 +239,17 @@ model GymMasterToken {
   expires    BigInt
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
+  @@map("gymmmaster_token")
 }
 
-model GymMasterTokenTest {
+model DecryptPwd {
   member_id  Int      @id
-  token      String
-  expires    BigInt
+  password   String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
+  @@map("decrypt_pwd")
 }
 
 enum UserRole {

@@ -1,8 +1,7 @@
 -- CreateTable
-CREATE TABLE `gymmmaster_token` (
+CREATE TABLE `decrypt_pwd` (
     `member_id` INTEGER NOT NULL,
-    `token` VARCHAR(191) NOT NULL,
-    `expires` BIGINT NOT NULL,
+    `password` VARCHAR(191) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 

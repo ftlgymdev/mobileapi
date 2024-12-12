@@ -1,1 +1,1 @@
-DROP TABLE GymMasterToken;
+DROP TABLE gymmmaster_token;

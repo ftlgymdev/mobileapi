@@ -13,7 +13,6 @@ const loginGymMasterApi = catchAsync(async (req, res) => {
   } catch (error) {
     console.error('Error:', error.message);
   }
-
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const tokens = await tokenService.generateAuthTokens(user);
   new ApiSuccess(res, { user, tokens }, 'User logged in successfully');
