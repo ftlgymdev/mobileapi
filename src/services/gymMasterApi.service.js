@@ -75,7 +75,7 @@ const login = async (params) => {
             await createToken(memberId, token, expires);
             return token;
         } else {
-            throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to retrieve token from GymMaster API');
+            throw new ApiError(httpStatus.BAD_REQUEST, 'Incorrect email or password, gmaster');
         }
     } catch (error) {
         throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error);

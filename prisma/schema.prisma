@@ -69,7 +69,7 @@ model UserLanguage {
 
 //start api ftl
 model Member {
-  id                          BigInt
+  id                          BigInt   @id
   member_id                   String   @db.VarChar(100)
   card_number                 String   @db.VarChar(20)
   type                        BigInt
@@ -105,10 +105,12 @@ model Member {
   created_by                  BigInt
   created_at                  DateTime
   updated_at                  DateTime
+
+  @@map("member")
 }
 
 model MemberPackage {
-  id                    BigInt
+  id                    BigInt   @id
   transaksi_id          BigInt
   user_id               BigInt
   member_id             BigInt
@@ -128,7 +130,7 @@ model MemberPackage {
 }
 
 model Transaction {
-  id             BigInt
+  id             BigInt   @id
   transaksi_id   BigInt
   type_transaksi Int
   user_id        BigInt
@@ -144,10 +146,12 @@ model Transaction {
   updated_by     BigInt
   updated_at     DateTime
   from_qios      Int
+
+  @@map("transaction")
 }
 
 model Club {
-  id                BigInt
+  id                BigInt   @id
   club_order        String
   name              String
   alias             String
@@ -166,16 +170,20 @@ model Club {
   link_payment      String
   doorid            BigInt
   doorkey           String
+
+  @@map("club")
 }
 
 model ClubCity {
-  id     BigInt
+  id     BigInt @id
   name   String
   status Int
+
+  @@map("club_city")
 }
 
 model RequestTransaksi {
-  id                  BigInt
+  id                  BigInt   @id
   created_by          BigInt
   request_id          BigInt
   member_id           BigInt
@@ -217,10 +225,12 @@ model RequestTransaksi {
   status_paid         String
   judul_permintaan    String
   deskripsi           String
+
+  @@map("request_transaksi")
 }
 
 model Scedule {
-  id                         BigInt
+  id                         BigInt   @id
   classid                    BigInt
   arrival                    DateTime
   starttime                  DateTime
@@ -307,10 +317,12 @@ model Scedule {
   check_in                   Int
   max_member                 Int
   max_non_member             Int
+
+  @@map("schedule")
 }
 
 model ScheduleBlist {
-  bid                           Int
+  bid                           Int      @id
   scheduleid                    BigInt
   membershipid                  String
   enquiryid                     String
@@ -345,10 +357,12 @@ model ScheduleBlist {
   highlighted_waivers           String
   memberfile                    String
   memberphoto                   String
+
+  @@map("schedule_blist")
 }
 
 model ScheduleClist {
-  id                BigInt
+  id                BigInt   @id
   scheduleid        BigInt
   repeat            String
   notes             String
@@ -361,6 +375,8 @@ model ScheduleClist {
   booking_name      String
   memberfile        String
   memberphoto       String
+
+  @@map("schedule_clist")
 }
 
 model GymMasterToken {
