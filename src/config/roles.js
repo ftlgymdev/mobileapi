@@ -1,7 +1,7 @@
 const { UserRole } = require('@prisma/client');
 
 const allRoles = {
-  [UserRole.USER]: [],
+  [UserRole.USER]: ['getProfile'],
   [UserRole.ADMIN]: ['getUsers', 'manageUsers']
 };
 
