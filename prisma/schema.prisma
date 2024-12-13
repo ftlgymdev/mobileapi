@@ -381,7 +381,7 @@ model ScheduleClist {
 
 model GymMasterToken {
   member_id  Int      @id
-  token      String
+  token      String   @db.VarChar(500)
   expires    BigInt
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -391,7 +391,7 @@ model GymMasterToken {
 
 model DecryptPwd {
   member_id  Int      @id
-  password   String
+  password   String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 

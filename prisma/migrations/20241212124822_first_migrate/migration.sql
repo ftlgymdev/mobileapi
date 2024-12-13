@@ -386,7 +386,7 @@ CREATE TABLE `schedule_clist` (
 -- CreateTable
 CREATE TABLE `gymmmaster_token` (
     `member_id` INTEGER NOT NULL,
-    `token` VARCHAR(191) NOT NULL,
+    `token` VARCHAR(500) NOT NULL,
     `expires` BIGINT NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
@@ -397,7 +397,7 @@ CREATE TABLE `gymmmaster_token` (
 -- CreateTable
 CREATE TABLE `decrypt_pwd` (
     `member_id` INTEGER NOT NULL,
-    `password` VARCHAR(191) NOT NULL,
+    `password` VARCHAR(191) NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
