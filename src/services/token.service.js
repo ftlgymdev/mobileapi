@@ -1,11 +1,11 @@
-const jwt = require('jsonwebtoken');
-const moment = require('moment');
-const httpStatus = require('http-status');
-const config = require('../config/config');
-const userService = require('./user.service');
-const ApiError = require('../utils/ApiError');
-const { Token, TokenType } = require('@prisma/client');
-const prisma = require('../client');
+const jwt = require("jsonwebtoken");
+const moment = require("moment");
+const httpStatus = require("http-status");
+const config = require("../config/config");
+const userService = require("./user.service");
+const ApiError = require("../utils/ApiError");
+const { Token, TokenType } = require("@prisma/client");
+const prisma = require("../client");
 
 /**
  * Generate token
@@ -20,7 +20,7 @@ const generateToken = (userId, expires, type, secret = config.jwt.secret) => {
     sub: userId,
     iat: moment().unix(),
     exp: expires.unix(),
-    type
+    type,
   };
   return jwt.sign(payload, secret);
 };
@@ -41,8 +41,8 @@ const saveToken = async (token, userId, expires, type, blacklisted = false) => {
       userId: userId,
       expires: expires.toDate(),
       type,
-      blacklisted
-    }
+      blacklisted,
+    },
   });
   return createdToken;
 };
@@ -54,13 +54,16 @@ const saveToken = async (token, userId, expires, type, blacklisted = false) => {
  * @returns {Promise<Token>}
  */
 const verifyToken = async (token, type) => {
+  console.log("deryconsol", { token, type });
+
   const payload = jwt.verify(token, config.jwt.secret);
   const userId = Number(payload.sub);
+
   const tokenData = await prisma.token.findFirst({
-    where: { token, type, userId, blacklisted: false }
+    where: { token, type, userId, blacklisted: false },
   });
   if (!tokenData) {
-    throw new Error('Token not found');
+    throw new Error("Token not found");
   }
   return tokenData;
 };
@@ -71,21 +74,40 @@ const verifyToken = async (token, type) => {
  * @returns {Promise<AuthTokensResponse>}
  */
 const generateAuthTokens = async (user) => {
-  const accessTokenExpires = moment().add(config.jwt.accessExpirationMinutes, 'minutes');
-  const accessToken = generateToken(user.id, accessTokenExpires, TokenType.ACCESS);
-  const refreshTokenExpires = moment().add(config.jwt.refreshExpirationDays, 'days');
-  const refreshToken = generateToken(user.id, refreshTokenExpires, TokenType.REFRESH);
-  await saveToken(refreshToken, user.id, refreshTokenExpires, TokenType.REFRESH);
+  const accessTokenExpires = moment().add(
+    config.jwt.accessExpirationMinutes,
+    "minutes"
+  );
+  const accessToken = generateToken(
+    user.id,
+    accessTokenExpires,
+    TokenType.ACCESS
+  );
+  const refreshTokenExpires = moment().add(
+    config.jwt.refreshExpirationDays,
+    "minutes"
+  );
+  const refreshToken = generateToken(
+    user.id,
+    refreshTokenExpires,
+    TokenType.REFRESH
+  );
+  await saveToken(
+    refreshToken,
+    user.id,
+    refreshTokenExpires,
+    TokenType.REFRESH
+  );
 
   return {
     access: {
       token: accessToken,
-      expires: accessTokenExpires.toDate()
+      expires: accessTokenExpires.toDate(),
     },
     refresh: {
       token: refreshToken,
-      expires: refreshTokenExpires.toDate()
-    }
+      expires: refreshTokenExpires.toDate(),
+    },
   };
 };
 
@@ -97,11 +119,23 @@ const generateAuthTokens = async (user) => {
 const generateResetPasswordToken = async (email) => {
   const user = await userService.getUserByEmail(email);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'No users found with this email');
+    throw new ApiError(httpStatus.NOT_FOUND, "No users found with this email");
   }
-  const expires = moment().add(config.jwt.resetPasswordExpirationMinutes, 'minutes');
-  const resetPasswordToken = generateToken(user.id, expires, TokenType.RESET_PASSWORD);
-  await saveToken(resetPasswordToken, user.id, expires, TokenType.RESET_PASSWORD);
+  const expires = moment().add(
+    config.jwt.resetPasswordExpirationMinutes,
+    "minutes"
+  );
+  const resetPasswordToken = generateToken(
+    user.id,
+    expires,
+    TokenType.RESET_PASSWORD
+  );
+  await saveToken(
+    resetPasswordToken,
+    user.id,
+    expires,
+    TokenType.RESET_PASSWORD
+  );
   return resetPasswordToken;
 };
 
@@ -111,8 +145,15 @@ const generateResetPasswordToken = async (email) => {
  * @returns {Promise<string>}
  */
 const generateVerifyEmailToken = async (user) => {
-  const expires = moment().add(config.jwt.verifyEmailExpirationMinutes, 'minutes');
-  const verifyEmailToken = generateToken(user.id, expires, TokenType.VERIFY_EMAIL);
+  const expires = moment().add(
+    config.jwt.verifyEmailExpirationMinutes,
+    "minutes"
+  );
+  const verifyEmailToken = generateToken(
+    user.id,
+    expires,
+    TokenType.VERIFY_EMAIL
+  );
   await saveToken(verifyEmailToken, user.id, expires, TokenType.VERIFY_EMAIL);
   return verifyEmailToken;
 };
@@ -123,5 +164,5 @@ module.exports = {
   verifyToken,
   generateAuthTokens,
   generateResetPasswordToken,
-  generateVerifyEmailToken
+  generateVerifyEmailToken,
 };

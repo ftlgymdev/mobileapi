@@ -151,25 +151,25 @@ model Transaction {
 }
 
 model Club {
-  id                BigInt   @id
-  club_order        String
-  name              String
-  alias             String
-  max_class_pilates Int
-  club_opening_date DateTime
-  country_id        String
-  city_id           Int
-  state_id          Int
-  address           String
-  latitude          String
-  longtitude        String
-  postal_code       String
-  status            Int
-  created_at        DateTime
-  updated_at        DateTime
-  link_payment      String
-  doorid            BigInt
-  doorkey           String
+  id                BigInt    @id
+  club_order        String?
+  name              String?
+  alias             String?
+  max_class_pilates Int?
+  club_opening_date DateTime?
+  country_id        String?
+  city_id           Int?
+  state_id          Int?
+  address           String?
+  latitude          String?
+  longtitude        String?
+  postal_code       String?
+  status            Int?
+  created_at        DateTime?
+  updated_at        DateTime?
+  link_payment      String?
+  doorid            BigInt?
+  doorkey           String?
 
   @@map("club")
 }

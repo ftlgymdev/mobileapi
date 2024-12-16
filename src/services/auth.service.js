@@ -1,11 +1,12 @@
-const httpStatus = require('http-status');
-const userService = require('./user.service');
-const { TokenType } = require('@prisma/client');
-const prisma = require('../client');
-const { encryptPassword, isPasswordMatch } = require('../utils/encryption');
-const exclude = require('../utils/exclude');
-const ApiError = require('../utils/ApiError');
-const gymMasterApiService = require('./gymMasterApi.service');
+const httpStatus = require("http-status");
+const userService = require("./user.service");
+const tokenService = require("./token.service");
+const { TokenType } = require("@prisma/client");
+const prisma = require("../client");
+const { encryptPassword, isPasswordMatch } = require("../utils/encryption");
+const exclude = require("../utils/exclude");
+const ApiError = require("../utils/ApiError");
+const gymMasterApiService = require("./gymMasterApi.service");
 
 /**
  * Login with username and password
@@ -16,21 +17,21 @@ const gymMasterApiService = require('./gymMasterApi.service');
 const loginUserWithEmailAndPassword = async (email, password) => {
   await gymMasterApiService.login({ email: email, password: password });
   const user = await userService.getUserByEmail(email, [
-    'id',
-    'email',
-    'name',
-    'password',
-    'role',
-    'isEmailVerified',
-    'createdAt',
-    'updatedAt'
+    "id",
+    "email",
+    "name",
+    "password",
+    "role",
+    "isEmailVerified",
+    "createdAt",
+    "updatedAt",
   ]);
   const encryptedPassword = await encryptPassword(password);
   await userService.updateUserById(user.id, { password: encryptedPassword });
   if (!user || !(await isPasswordMatch(password, user.password))) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Incorrect email or password");
   }
-  return exclude(user, ['password']);
+  return exclude(user, ["password"]);
 };
 
 /**
@@ -43,11 +44,11 @@ const logout = async (refreshToken) => {
     where: {
       token: refreshToken,
       type: TokenType.REFRESH,
-      blacklisted: false
-    }
+      blacklisted: false,
+    },
   });
   if (!refreshTokenData) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Not found');
+    throw new ApiError(httpStatus.NOT_FOUND, "Not found");
   }
   await prisma.token.delete({ where: { id: refreshTokenData.id } });
 };
@@ -59,12 +60,18 @@ const logout = async (refreshToken) => {
  */
 const refreshAuth = async (refreshToken) => {
   try {
-    const refreshTokenData = await tokenService.verifyToken(refreshToken, TokenType.REFRESH);
+    const refreshTokenData = await tokenService.verifyToken(
+      refreshToken,
+      TokenType.REFRESH
+    );
+
     const { userId } = refreshTokenData;
     await prisma.token.delete({ where: { id: refreshTokenData.id } });
     return tokenService.generateAuthTokens({ id: userId });
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
+    console.log({ aapaian: error });
+
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate");
   }
 };
 
@@ -86,9 +93,11 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
     }
     const encryptedPassword = await encryptPassword(newPassword);
     await userService.updateUserById(user.id, { password: encryptedPassword });
-    await prisma.token.deleteMany({ where: { userId: user.id, type: TokenType.RESET_PASSWORD } });
+    await prisma.token.deleteMany({
+      where: { userId: user.id, type: TokenType.RESET_PASSWORD },
+    });
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Password reset failed');
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Password reset failed");
   }
 };
 
@@ -104,12 +113,17 @@ const verifyEmail = async (verifyEmailToken) => {
       TokenType.VERIFY_EMAIL
     );
     await prisma.token.deleteMany({
-      where: { userId: verifyEmailTokenData.userId, type: TokenType.VERIFY_EMAIL }
+      where: {
+        userId: verifyEmailTokenData.userId,
+        type: TokenType.VERIFY_EMAIL,
+      },
     });
 
-    await userService.updateUserById(verifyEmailTokenData.userId, { isEmailVerified: true });
+    await userService.updateUserById(verifyEmailTokenData.userId, {
+      isEmailVerified: true,
+    });
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Email verification failed');
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Email verification failed");
   }
 };
 
@@ -120,5 +134,5 @@ module.exports = {
   logout,
   refreshAuth,
   resetPassword,
-  verifyEmail
+  verifyEmail,
 };
