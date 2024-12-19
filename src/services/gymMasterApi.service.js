@@ -100,10 +100,10 @@ const getToken = async () => {
  * @param {Object} data
  * @returns {Promise<Object>}
  */
-const post = async (endpoint, data = {}) => {
+const post = async (endpoint, headers = {}, data = {}) => {
     try {
         data.api_key = process.env.GYMMASTER_API_KEY;
-        const response = await axios.post(`${process.env.GYMMASTER_BASE_URL}${endpoint}`, data);
+        const response = await axios.post(`${process.env.GYMMASTER_BASE_URL}${endpoint}`, data, { headers });
         return response.data || {};
     } catch (error) {
         console.error("POST Request Error:", error.message);

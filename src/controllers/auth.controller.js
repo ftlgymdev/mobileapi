@@ -7,7 +7,7 @@ const httpStatus = require('http-status');
 const register = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const user = await userService.createUser(email, password);
-  const userWithoutPassword = exclude(user, ['password', 'createdAt', 'updatedAt']);
+  const userWithoutPassword = exclude(user, ['password', 'created_at', 'updated_at']);
   const tokens = await tokenService.generateAuthTokens(user);
   new ApiSuccess(
     res,
