@@ -9,6 +9,7 @@ const allRoles = {
     "getNotif",
     "creteNotif",
     "getVersi",
+    "checkin",
   ],
   [UserRole.ADMIN]: ["getUsers", "manageUsers"],
 };

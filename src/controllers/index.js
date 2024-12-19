@@ -6,6 +6,7 @@ const clubController = require("./club.controller");
 const notifController = require("./notif.controller");
 const configController = require("./config.controller");
 const fcmController = require("./fcm.controller");
+const checkinController = require("./checkin.controller");
 
 module.exports = {
   authController,
@@ -16,4 +17,5 @@ module.exports = {
   notifController,
   configController,
   fcmController,
+  checkinController,
 };

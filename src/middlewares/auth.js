@@ -5,7 +5,7 @@ const { roleRights } = require("../config/roles");
 
 const verifyCallback =
   (req, resolve, reject, requiredRights) => async (err, user, info) => {
-
+    console.log('user ===========', user);
     if (err || info || !user) {
       return reject(
         new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate")
@@ -15,8 +15,6 @@ const verifyCallback =
 
     if (requiredRights.length) {
       const userRights = roleRights.get(user.role) ?? [];
-      console.log({ dery: userRights });
-
       const hasRequiredRights = requiredRights.every((requiredRight) =>
         userRights.includes(requiredRight)
       );
