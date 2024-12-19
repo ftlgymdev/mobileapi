@@ -7,63 +7,52 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// model Users {
-//   id              BigInt   @id @default(autoincrement())
-//   name            String?  @db.VarChar(255)
-//   email           String   @unique @db.VarChar(255)
-//   isEmailVerified Boolean  @default(false)
-//   role            UserRole @default(USER)
-//   password        String
-//   createdAt       DateTime @default(now())
-//   updatedAt       DateTime @updatedAt
-
-//   Token        Token[]
-//   UserLanguage UserLanguage[]
-// }
-
 model User {
-  id                          BigInt         @id
-  member_id                   String         @db.VarChar(100)
-  card_number                 String         @db.VarChar(20)
-  type                        BigInt
-  compliment_id               BigInt
-  compliment_type             String         @db.VarChar(100)
-  first_name                  String         @db.VarChar(50)
-  last_name                   String         @db.VarChar(50)
-  dob                         DateTime
-  gender                      BigInt
+  id                          BigInt         @id @default(autoincrement())
+  member_id                   String?        @db.VarChar(100)
+  card_number                 String?        @db.VarChar(20)
+  type                        BigInt?
+  compliment_id               BigInt?
+  compliment_type             String?        @db.VarChar(100)
+  first_name                  String?        @db.VarChar(50)
+  last_name                   String?        @db.VarChar(50)
+  dob                         DateTime?
+  gender                      BigInt?
   email                       String         @unique @db.VarChar(255)
-  phone                       String
-  ktp_number                  String         @db.VarChar(16)
-  weight                      Float
-  height                      Float
-  hobby                       String
-  gym_status                  Int
-  gym_brand_id                Int
-  statement_compliment_status Int
-  term_status                 Int
-  address                     String
-  city_id                     BigInt
-  state_id                    BigInt
-  district_id                 BigInt
-  subdistrict_id              BigInt
-  postal_code                 String
-  club_id                     Int
-  status                      Int
-  source                      String
-  appointment_id              BigInt
-  approve_status              Int
-  approved_by                 BigInt
-  approved_at                 DateTime
-  created_by                  BigInt
-  created_at                  DateTime
-  updated_at                  DateTime
-  // merge
-  isEmailVerified             Boolean        @default(true)
+  phone                       String?
+  ktp_number                  String?        @db.VarChar(16)
+  weight                      Float?
+  height                      Float?
+  hobby                       String?
+  gym_status                  Int?
+  gym_brand_id                Int?
+  statement_compliment_status Int?
+  term_status                 Int?
+  address                     String?
+  city_id                     BigInt?
+  state_id                    BigInt?
+  district_id                 BigInt?
+  subdistrict_id              BigInt?
+  postal_code                 String?
+  club_id                     Int?
+  status                      Int?
+  source                      String?
+  appointment_id              BigInt?
+  approve_status              Int?
+  approved_by                 BigInt?
+  approved_at                 DateTime?
+  created_by                  BigInt?
+  created_at                  DateTime?
+  updated_at                  DateTime?
+  is_email_verified           Boolean?       @default(true)
   role                        UserRole       @default(USER)
-  password                    String
+  password                    String?
   Token                       Token[]
   UserLanguage                UserLanguage[]
+
+  sentNotifications     Notification[] @relation("SenderRelation")
+  receivedNotifications Notification[] @relation("ReceiverRelation")
+  Club                  Club[]
 
   @@map("member")
 }
@@ -106,15 +95,15 @@ model Staff {
   phone                String    @db.VarChar(15)
   nik                  String    @db.VarChar(16)
   password             String    @db.VarChar(255)
-  gender               Int       @default(0) //@comment("1 = Male, 0 = Female")
+  gender               Int       @default(0)
   dob                  DateTime  @db.Date
   city_id              Int
   province_id          Int
-  club_id              Int //@relation(fields: [club_id], references: [id])
+  club_id              BigInt
   address              String    @db.VarChar(255)
-  trainer_level_id     Int       @default(0) //@comment("1 = Regular, 2 = Advance, 0 = Not Set")
+  trainer_level_id     Int       @default(0)
   description          String?   @db.VarChar(255)
-  status               Int       @default(1) //@comment("1 = Active, 0 = Non Active, 2 = Freeze, 3 = Request Move Clubs")
+  status               Int       @default(1)
   reject_note          String?   @db.VarChar(100)
   activated_by         BigInt?   @db.BigInt
   activated_date       DateTime?
@@ -137,47 +126,48 @@ model Staff {
   basic_salary         BigInt    @db.BigInt
   positional_allowance BigInt    @db.BigInt
   other_allowances     BigInt    @db.BigInt
+  Club                 Club      @relation(fields: [club_id], references: [id])
 
   @@map("user")
 }
 
 model MemberPackage {
-  id                    BigInt   @id
-  transaksi_id          BigInt
-  user_id               BigInt
-  member_id             BigInt
-  package_id            BigInt
-  personal_trainer_name String
-  status                Int
-  member_sharing_id     BigInt
-  member_br             BigInt
-  coupon_go             String
-  start_date            DateTime
-  expired_date          DateTime
-  value                 Decimal
-  created_at            DateTime
-  updated_at            DateTime
+  id                    BigInt    @id
+  transaksi_id          BigInt    @default(0)
+  user_id               BigInt    @default(0)
+  member_id             BigInt?
+  package_id            BigInt?
+  personal_trainer_name String?
+  status                Int?
+  member_sharing_id     BigInt?
+  member_br             BigInt?
+  coupon_go             String?
+  start_date            DateTime?
+  expired_date          DateTime?
+  value                 Decimal?
+  created_at            DateTime?
+  updated_at            DateTime?
 
   @@map("member_package")
 }
 
 model Transaction {
-  id             BigInt   @id
-  transaksi_id   BigInt
-  type_transaksi Int
-  user_id        BigInt
-  member_id      BigInt
-  package_id     BigInt
-  club_id        Int
-  price          Decimal
-  status         Int
-  approve_status Int
-  approved_by    BigInt
-  approved_at    DateTime
-  created_at     DateTime
-  updated_by     BigInt
-  updated_at     DateTime
-  from_qios      Int
+  id             BigInt    @id
+  transaksi_id   BigInt    @default(0)
+  type_transaksi Int       @default(0)
+  user_id        BigInt?
+  member_id      BigInt?
+  package_id     BigInt?
+  club_id        Int?
+  price          Decimal?
+  status         Int?
+  approve_status Int?      @default(0)
+  approved_by    BigInt?
+  approved_at    DateTime?
+  created_at     DateTime?
+  updated_by     BigInt?
+  updated_at     DateTime?
+  from_qios      Int?      @default(0)
 
   @@map("transaction")
 }
@@ -186,7 +176,7 @@ model Club {
   id                BigInt       @id
   club_order        String?
   name              String?
-  alias             String?
+  alias             String
   max_class_pilates Int?
   club_opening_date DateTime?
   country_id        String?
@@ -203,211 +193,213 @@ model Club {
   doorid            BigInt?
   doorkey           String?
   ClubImages        ClubImages[]
+  Staff             Staff[]
+  User              User[]
 
   @@map("club")
 }
 
 model ClubCity {
-  id     BigInt @id
-  name   String
-  status Int
+  id     BigInt  @id
+  name   String?
+  status Int?
 
   @@map("club_city")
 }
 
 model RequestTransaksi {
-  id                  BigInt   @id
+  id                  BigInt    @id
   created_by          BigInt
-  request_id          BigInt
-  member_id           BigInt
-  data_old            String
-  first_name          String
-  last_name           String
-  email               String
-  phone               String
-  address             String
-  relation_id         Int
-  start_date          DateTime
-  package             BigInt
-  card_member         String
-  personal_trainer    BigInt
-  medical_reason_type Int
-  freeze_duration_id  Int
-  cuti_date           DateTime
-  cuti_amount         Int
-  medical_amount      BigInt
-  nominal_refund      BigInt
-  note                String
-  status              Int
-  approve_status      Int
-  approve_status_2    BigInt
-  approve_status_3    BigInt
-  checked             Int
-  note_rejected       String
-  note_rejected_2     String
-  approved_by         BigInt
-  approved_by_2       BigInt
-  approved_by_3       BigInt
-  approved_at         DateTime
-  approved_at_2       DateTime
-  approved_at_3       DateTime
-  created_at          DateTime
-  updated_by          BigInt
-  updated_at          DateTime
-  external_id         String
-  status_paid         String
-  judul_permintaan    String
-  deskripsi           String
+  request_id          BigInt?
+  member_id           BigInt?
+  data_old            String?
+  first_name          String?
+  last_name           String?
+  email               String?
+  phone               String?
+  address             String?
+  relation_id         Int?
+  start_date          DateTime?
+  package             BigInt?
+  card_member         String?
+  personal_trainer    BigInt?
+  medical_reason_type Int?
+  freeze_duration_id  Int?
+  cuti_date           DateTime?
+  cuti_amount         Int?
+  medical_amount      BigInt?   @default(0)
+  nominal_refund      BigInt?   @default(0)
+  note                String?
+  status              Int?
+  approve_status      Int?
+  approve_status_2    BigInt?
+  approve_status_3    BigInt?
+  checked             Int       @default(0)
+  note_rejected       String?
+  note_rejected_2     String?
+  approved_by         BigInt?
+  approved_by_2       BigInt?
+  approved_by_3       BigInt?
+  approved_at         DateTime?
+  approved_at_2       DateTime?
+  approved_at_3       DateTime?
+  created_at          DateTime?
+  updated_by          BigInt?
+  updated_at          DateTime?
+  external_id         String?
+  status_paid         String?
+  judul_permintaan    String?
+  deskripsi           String?
 
   @@map("request_transaksi")
 }
 
-model Scedule {
-  id                         BigInt   @id
-  classid                    BigInt
-  arrival                    DateTime
-  starttime                  DateTime
-  endtime                    DateTime
-  start_str                  DateTime
-  end_str                    DateTime
-  resourceid                 BigInt
-  location                   String
-  price                      BigInt
-  price_numeric              BigInt
-  spacesfree                 Int
-  seatallocation             Int
-  multiplebookings           String
-  minimum_age                Int
-  maximum_age                Int
-  age_min                    Int
-  age_max                    Int
-  max_waitinglist            Int
-  max_students               Int
-  bookingname                String
-  classname                  String
-  bookable                   Int
-  percentfull                Int
-  num_students               Int
-  already_booked_id          Int
-  already_booked_waitlist_id Int
-  staffname                  String
-  cancelfee                  BigInt
-  cancelbenefitloss          String
-  waitlist_count             Int
-  substitute_staff           String
-  staffid                    BigInt
-  bgcolour                   String
-  description                String
-  online_instruction         Int
-  informationlink            String
-  notes                      String
-  companyid                  BigInt
-  companyname                String
-  allow_skip_payment         Int
-  prospectonly               String
-  latebooking                String
-  prereq_questionnaireid     Int
-  sortorder                  Int
-  classtypeid                Int
-  classtypename              String
-  repeatfreq                 String
-  repeatend                  String
-  auto_enrollment            String
-  pre_discount_price         BigInt
-  startrow                   Int
-  true_starttime             DateTime
-  prevbid                    BigInt
-  prevbid_waitlist           String
-  current                    String
-  in_future                  String
-  NAME                       String
-  repeatend_iso              String
-  repeatend_str              String
-  arrival_iso                DateTime
-  arrival_str                String
-  single_guest_addonfee      String
-  multiple_guest_addonfee    String
-  layout                     String
-  description_html           String
-  image                      String
-  availability               String
-  dayofweek                  String
-  staffphoto                 String
-  salary                     BigInt
-  staffnamecover             String
-  staffphotocover            String
-  labelclass                 String
-  total_seat                 Int
-  booked_seat                Int
-  available_seat             Int
-  submit                     Int
-  status                     Int
-  created_at                 DateTime
-  updated_at                 DateTime
-  additionalstaffname        String
-  display_push               Int
-  display_clear              Int
-  check_in                   Int
-  max_member                 Int
-  max_non_member             Int
+model Schedule {
+  id                         BigInt    @id
+  classid                    BigInt?
+  arrival                    DateTime?
+  starttime                  DateTime?
+  endtime                    DateTime?
+  start_str                  DateTime?
+  end_str                    DateTime?
+  resourceid                 BigInt?
+  location                   String?
+  price                      BigInt?
+  price_numeric              BigInt?
+  spacesfree                 Int?
+  seatallocation             Int?
+  multiplebookings           String?
+  minimum_age                Int?
+  maximum_age                Int?
+  age_min                    Int?
+  age_max                    Int?
+  max_waitinglist            Int?
+  max_students               Int?
+  bookingname                String?
+  classname                  String?
+  bookable                   Int?
+  percentfull                Int?
+  num_students               Int?
+  already_booked_id          Int?
+  already_booked_waitlist_id Int?
+  staffname                  String?
+  cancelfee                  BigInt?
+  cancelbenefitloss          String?
+  waitlist_count             Int?
+  substitute_staff           String?
+  staffid                    BigInt?
+  bgcolour                   String?
+  description                String?
+  online_instruction         Int?
+  informationlink            String?
+  notes                      String?
+  companyid                  BigInt?
+  companyname                String?
+  allow_skip_payment         Int?
+  prospectonly               String?
+  latebooking                String?
+  prereq_questionnaireid     Int?
+  sortorder                  Int?
+  classtypeid                Int?
+  classtypename              String?
+  repeatfreq                 String?
+  repeatend                  String?
+  auto_enrollment            String?
+  pre_discount_price         BigInt?
+  startrow                   Int?
+  true_starttime             DateTime?
+  prevbid                    BigInt?
+  prevbid_waitlist           String?
+  current                    String?
+  in_future                  String?
+  NAME                       String?
+  repeatend_iso              String?
+  repeatend_str              String?
+  arrival_iso                DateTime?
+  arrival_str                String?
+  single_guest_addonfee      String?
+  multiple_guest_addonfee    String?
+  layout                     String?
+  description_html           String?
+  image                      String?
+  availability               String?
+  dayofweek                  String?
+  staffphoto                 String?
+  salary                     BigInt?   @default(0)
+  staffnamecover             String?
+  staffphotocover            String?
+  labelclass                 String?
+  total_seat                 Int?      @default(0)
+  booked_seat                Int?      @default(0)
+  available_seat             Int?      @default(0)
+  submit                     Int?      @default(0)
+  status                     Int?      @default(0)
+  created_at                 DateTime? @default(now())
+  updated_at                 DateTime? @updatedAt
+  additionalstaffname        String?
+  display_push               Int?      @default(0)
+  display_clear              Int?      @default(0)
+  check_in                   Int?
+  max_member                 Int?
+  max_non_member             Int?
 
   @@map("schedule")
 }
 
 model ScheduleBlist {
-  bid                           Int      @id
-  scheduleid                    BigInt
-  membershipid                  String
-  enquiryid                     String
-  repeat                        String
-  seat                          Int
-  notes                         String
-  webbooking                    Int
-  webip                         String
-  result                        Int
-  parentid                      Int
-  firstname                     String
-  surname                       String
-  checkin                       DateTime
-  price                         Decimal
-  rating                        String
-  feedback                      String
-  discount_code_id              String
-  memberid                      Int
-  birthday_today                String
-  medicalconditions             String
-  customdropdown2value          String
-  customboolean8                String
-  customtext1                   String
-  member_parentname             String
-  paid                          Int
-  fullname                      String
-  memberblank                   String
-  booking_name                  String
-  is_cancelling_membership      String
-  is_firsttime_attend_classtype String
-  bookings_attended             Int
-  highlighted_waivers           String
-  memberfile                    String
-  memberphoto                   String
+  bid                           Int       @id
+  scheduleid                    BigInt?
+  membershipid                  String?
+  enquiryid                     String?
+  repeat                        String?
+  seat                          Int?
+  notes                         String?
+  webbooking                    Int?
+  webip                         String?
+  result                        Int?
+  parentid                      Int?
+  firstname                     String?
+  surname                       String?
+  checkin                       DateTime?
+  price                         Decimal?
+  rating                        String?
+  feedback                      String?
+  discount_code_id              String?
+  memberid                      Int?
+  birthday_today                String?
+  medicalconditions             String?
+  customdropdown2value          String?
+  customboolean8                String?
+  customtext1                   String?
+  member_parentname             String?
+  paid                          Int?
+  fullname                      String?
+  memberblank                   String?
+  booking_name                  String?
+  is_cancelling_membership      String?
+  is_firsttime_attend_classtype String?
+  bookings_attended             Int?
+  highlighted_waivers           String?
+  memberfile                    String?
+  memberphoto                   String?
 
   @@map("schedule_blist")
 }
 
 model ScheduleClist {
-  id                BigInt   @id
-  scheduleid        BigInt
-  repeat            String
-  notes             String
-  webbooking        Int
-  lastupdate        DateTime
-  memberid          Int
-  member_parentname String
-  fullname          String
-  memberblank       String
-  booking_name      String
-  memberfile        String
-  memberphoto       String
+  id                BigInt    @id
+  scheduleid        BigInt?
+  repeat            String?
+  notes             String?
+  webbooking        Int?
+  lastupdate        DateTime?
+  memberid          Int?
+  member_parentname String?
+  fullname          String?
+  memberblank       String?
+  booking_name      String?
+  memberfile        String?
+  memberphoto       String?
 
   @@map("schedule_clist")
 }
@@ -419,46 +411,46 @@ model GymMasterToken {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  @@map("gymmmaster_token")
+  @@map("mobile_gymmmaster_member_tokens")
 }
 
 model DecryptPwd {
   member_id  Int      @id
+  email      String   @unique
   password   String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  @@map("decrypt_pwd")
+  @@map("decrypt_memberpwd")
 }
 
 model Notification {
   id         Int      @id @default(autoincrement())
-  senderId   Int?
-  receiverId Int?
+  senderId   BigInt?
+  receiverId BigInt?
   title      String   @db.VarChar(255)
-  message    String   @db.LongText
+  message    String?  @db.LongText
   isRead     Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  Sender     User?    @relation("SenderRelation", fields: [senderId], references: [id])
+  Receiver   User?    @relation("ReceiverRelation", fields: [receiverId], references: [id])
 
-  // // Relasi ke User
-  // sender      User      @relation("Sender", fields: [senderId], references: [id])
-  // receiver    User      @relation("Receiver", fields: [receiverId], references: [id])
-  @@map("notifications")
+  @@map("mobile_notifications")
 }
 
 model AppConfig {
   id              Int      @id @default(autoincrement())
-  platform        String // Platform: android or ios
-  version         String // Versi aplikasi
-  forceUpdate     Boolean  @default(false) // Apakah user harus update paksa
-  downloadUrl     String? // URL untuk download versi baru
-  maintenanceMode Boolean  @default(false) // Maintenance mode
-  message         String // Pesan untuk user (misal: info update)
+  platform        String?
+  version         String?
+  forceUpdate     Boolean  @default(false)
+  downloadUrl     String?
+  maintenanceMode Boolean  @default(false)
+  message         String
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  @@map("app_config")
+  @@map("mobile_app_config")
 }
 
 model ClubImages {
@@ -469,13 +461,12 @@ model ClubImages {
   file_path      String   @db.VarChar(100)
   file_name      String   @db.VarChar(250)
   file_extention String   @db.VarChar(50)
-  status         Int      @default(1) @db.Int // Default aktif
+  status         Int      @default(1)
   created_by     BigInt   @db.BigInt
   updated_by     BigInt?  @db.BigInt
   created_at     DateTime @default(now())
   updated_at     DateTime @updatedAt
-
-  Club Club @relation(fields: [club_id], references: [id])
+  Club           Club     @relation(fields: [club_id], references: [id])
 
   @@map("mobile_club_images")
 }
