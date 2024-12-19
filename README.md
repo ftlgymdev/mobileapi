@@ -1,5 +1,6 @@
 # mobileapi
 API for FTL mobile apps
 
+rm -r prisma/migrations
 prisma migrate dev --skip-seed
 prisma db seed
