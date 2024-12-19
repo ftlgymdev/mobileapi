@@ -107,7 +107,7 @@ const queryUsersNotif = async (
     where.title = { contains: filter.title }; // Case-insensitive search
   }
   const users = await prisma.notification.findMany({
-    where: filter,
+    where: where,
     // select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
     // select: {},
     skip: (page - 1) * limit, // Corrected to (page - 1) * limit
