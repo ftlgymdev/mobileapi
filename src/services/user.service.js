@@ -9,14 +9,15 @@ const { encryptPassword } = require("../utils/encryption");
  * @param {Object} userBody
  * @returns {Promise<User>}
  */
-const createUser = async (email, password, name, role = UserRole.USER) => {
+const createUser = async (email, password, first_name, last_name, role = UserRole.USER) => {
   if (await getUserByEmail(email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
   }
   return prisma.user.create({
     data: {
       email,
-      name,
+      first_name,
+      last_name,
       password: await encryptPassword(password),
       role,
     },
@@ -52,10 +53,11 @@ const queryUsers = async (
   keys = [
     "id",
     "email",
-    "name",
+    "first_name",
+    "last_name",
     "password",
     "role",
-    "isEmailVerified",
+    "is_email_verified",
     "createdAt",
     "updatedAt",
   ]
@@ -89,10 +91,11 @@ const queryUsersNotif = async (
   keys = [
     "id",
     "senderId",
-    "name",
+    "first_name",
+    "last_name",
     "password",
     "role",
-    "isEmailVerified",
+    "is_email_verified",
     "createdAt",
     "updatedAt",
   ]
@@ -128,10 +131,11 @@ const getUserById = async (
   keys = [
     "id",
     "email",
-    "name",
+    "first_name",
+    "last_name",
     "password",
     "role",
-    "isEmailVerified",
+    "is_email_verified",
     "createdAt",
     "updatedAt",
   ]
@@ -153,14 +157,16 @@ const getUserByEmail = async (
   keys = [
     "id",
     "email",
-    "name",
+    "first_name",
+    "last_name",
     "password",
     "role",
-    "isEmailVerified",
-    "createdAt",
-    "updatedAt",
+    "is_email_verified",
+    "created_at",
+    "updated_at",
   ]
 ) => {
+  console.log({ 'keys': keys });
   return prisma.user.findUnique({
     where: { email },
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
@@ -176,9 +182,9 @@ const getUserByEmail = async (
 const updateUserById = async (
   userId,
   updateBody,
-  keys = ["id", "email", "name", "role"]
+  keys = ["id", "email", "first_name", "last_name", "role"]
 ) => {
-  const user = await getUserById(userId, ["id", "email", "name"]);
+  const user = await getUserById(userId, ["id", "email", "first_name", "last_name"]);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }

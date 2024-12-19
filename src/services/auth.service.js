@@ -19,12 +19,13 @@ const loginUserWithEmailAndPassword = async (email, password) => {
   const user = await userService.getUserByEmail(email, [
     "id",
     "email",
-    "name",
+    "first_name",
+    "last_name",
     "password",
     "role",
-    "isEmailVerified",
-    "createdAt",
-    "updatedAt",
+    "is_email_verified",
+    "created_at",
+    "updated_at",
   ]);
   const encryptedPassword = await encryptPassword(password);
   await userService.updateUserById(user.id, { password: encryptedPassword });
@@ -120,7 +121,7 @@ const verifyEmail = async (verifyEmailToken) => {
     });
 
     await userService.updateUserById(verifyEmailTokenData.userId, {
-      isEmailVerified: true,
+      is_email_verified: true,
     });
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Email verification failed");
