@@ -5,4 +5,5 @@ module.exports = {
   emailService: require("./email.service"),
   gymMasterApiService: require("./gymMasterApi.service"),
   clubService: require("./club.service"),
+  notifService: require("./notif.service"),
 };

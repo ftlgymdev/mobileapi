@@ -5,6 +5,9 @@ const testRoute = require("./test.route");
 const config = require("../../config/config");
 const profileRoute = require("./profile.route");
 const clubRoute = require("./club.route");
+const notifRoute = require("./notif.route");
+const configRoute = require("./config.route");
+const fcmRoute = require("./fcm.route");
 
 const router = express.Router();
 
@@ -24,6 +27,18 @@ const defaultRoutes = [
   {
     path: "/clubs",
     route: clubRoute,
+  },
+  {
+    path: "/notifications",
+    route: notifRoute,
+  },
+  {
+    path: "/config",
+    route: configRoute,
+  },
+  {
+    path: "/fcm",
+    route: fcmRoute,
   },
 ];
 

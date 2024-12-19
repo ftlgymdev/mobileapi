@@ -17,7 +17,8 @@ async function main() {
     where: { email: "derykamalino@gmail.com" },
     update: {},
     create: {
-      name: "dery",
+      first_name: "dery",
+      last_name: "kamalino",
       email: "derykamalino@gmail.com",
       isEmailVerified: true,
       password: await encryptPassword(process.env.USER_TEST_PASSWORD),

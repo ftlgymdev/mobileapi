@@ -7,36 +7,65 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id              BigInt   @id @default(autoincrement())
-  name            String?  @db.VarChar(255)
-  email           String   @unique @db.VarChar(255)
-  isEmailVerified Boolean  @default(false)
-  role            UserRole @default(USER)
-  password        String
-  about           String?
-  degreeId        BigInt?
-  school          String?
-  industryId      BigInt?
-  occupationId    BigInt?
-  domicile        String?
-  height          Float?
-  zodiacId        BigInt?
-  bloodTypeId     BigInt?
-  lookingForId    BigInt?
-  petId           BigInt?
-  exerciseId      BigInt?
-  smokingHabitId  BigInt?
-  drinkingHabitId BigInt?
-  offDayId        BigInt?
-  dietId          BigInt?
-  foodId          BigInt?
-  musicId         BigInt?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+// model Users {
+//   id              BigInt   @id @default(autoincrement())
+//   name            String?  @db.VarChar(255)
+//   email           String   @unique @db.VarChar(255)
+//   isEmailVerified Boolean  @default(false)
+//   role            UserRole @default(USER)
+//   password        String
+//   createdAt       DateTime @default(now())
+//   updatedAt       DateTime @updatedAt
 
-  Token        Token[]
-  UserLanguage UserLanguage[]
+//   Token        Token[]
+//   UserLanguage UserLanguage[]
+// }
+
+model User {
+  id                          BigInt         @id
+  member_id                   String         @db.VarChar(100)
+  card_number                 String         @db.VarChar(20)
+  type                        BigInt
+  compliment_id               BigInt
+  compliment_type             String         @db.VarChar(100)
+  first_name                  String         @db.VarChar(50)
+  last_name                   String         @db.VarChar(50)
+  dob                         DateTime
+  gender                      BigInt
+  email                       String         @unique @db.VarChar(255)
+  phone                       String
+  ktp_number                  String         @db.VarChar(16)
+  weight                      Float
+  height                      Float
+  hobby                       String
+  gym_status                  Int
+  gym_brand_id                Int
+  statement_compliment_status Int
+  term_status                 Int
+  address                     String
+  city_id                     BigInt
+  state_id                    BigInt
+  district_id                 BigInt
+  subdistrict_id              BigInt
+  postal_code                 String
+  club_id                     Int
+  status                      Int
+  source                      String
+  appointment_id              BigInt
+  approve_status              Int
+  approved_by                 BigInt
+  approved_at                 DateTime
+  created_by                  BigInt
+  created_at                  DateTime
+  updated_at                  DateTime
+  // merge
+  isEmailVerified             Boolean        @default(true)
+  role                        UserRole       @default(USER)
+  password                    String
+  Token                       Token[]
+  UserLanguage                UserLanguage[]
+
+  @@map("member")
 }
 
 model Token {
@@ -68,45 +97,48 @@ model UserLanguage {
 }
 
 //start api ftl
-model Member {
-  id                          BigInt   @id
-  member_id                   String   @db.VarChar(100)
-  card_number                 String   @db.VarChar(20)
-  type                        BigInt
-  compliment_id               BigInt
-  compliment_type             String   @db.VarChar(100)
-  first_name                  String   @db.VarChar(50)
-  last_name                   String   @db.VarChar(50)
-  dob                         DateTime
-  gender                      BigInt
-  email                       String   @db.VarChar(100)
-  phone                       String
-  ktp_number                  String   @db.VarChar(16)
-  weight                      Float
-  height                      Float
-  hobby                       String
-  gym_status                  Int
-  gym_brand_id                Int
-  statement_compliment_status Int
-  term_status                 Int
-  address                     String
-  city_id                     BigInt
-  state_id                    BigInt
-  district_id                 BigInt
-  subdistrict_id              BigInt
-  postal_code                 String
-  club_id                     Int
-  status                      Int
-  source                      String
-  appointment_id              BigInt
-  approve_status              Int
-  approved_by                 BigInt
-  approved_at                 DateTime
-  created_by                  BigInt
-  created_at                  DateTime
-  updated_at                  DateTime
 
-  @@map("member")
+model Staff {
+  id                   BigInt    @id @default(autoincrement()) @db.BigInt
+  first_name           String    @db.VarChar(50)
+  last_name            String    @db.VarChar(50)
+  email                String    @unique @db.VarChar(50)
+  phone                String    @db.VarChar(15)
+  nik                  String    @db.VarChar(16)
+  password             String    @db.VarChar(255)
+  gender               Int       @default(0) //@comment("1 = Male, 0 = Female")
+  dob                  DateTime  @db.Date
+  city_id              Int
+  province_id          Int
+  club_id              Int //@relation(fields: [club_id], references: [id])
+  address              String    @db.VarChar(255)
+  trainer_level_id     Int       @default(0) //@comment("1 = Regular, 2 = Advance, 0 = Not Set")
+  description          String?   @db.VarChar(255)
+  status               Int       @default(1) //@comment("1 = Active, 0 = Non Active, 2 = Freeze, 3 = Request Move Clubs")
+  reject_note          String?   @db.VarChar(100)
+  activated_by         BigInt?   @db.BigInt
+  activated_date       DateTime?
+  join_date            DateTime?
+  resign_date          DateTime?
+  note_resign          String?   @db.Text
+  id_bitrix            Int?
+  id_gymmaster         Int?
+  resource_id          BigInt?   @db.BigInt
+  id_greatday          BigInt?   @db.BigInt
+  status_request       Int?      @default(0)
+  request              String?   @db.VarChar(256)
+  created_by           BigInt    @db.BigInt
+  updated_by           BigInt?   @db.BigInt
+  created_at           DateTime  @default(now())
+  updated_at           DateTime  @updatedAt
+  no_rekening          String?   @db.VarChar(250)
+  nama_rekening        String?   @db.VarChar(250)
+  total_hari_kerja     Int
+  basic_salary         BigInt    @db.BigInt
+  positional_allowance BigInt    @db.BigInt
+  other_allowances     BigInt    @db.BigInt
+
+  @@map("user")
 }
 
 model MemberPackage {
@@ -151,7 +183,7 @@ model Transaction {
 }
 
 model Club {
-  id                BigInt    @id
+  id                BigInt       @id
   club_order        String?
   name              String?
   alias             String?
@@ -170,6 +202,7 @@ model Club {
   link_payment      String?
   doorid            BigInt?
   doorkey           String?
+  ClubImages        ClubImages[]
 
   @@map("club")
 }
@@ -396,6 +429,80 @@ model DecryptPwd {
   updated_at DateTime @updatedAt
 
   @@map("decrypt_pwd")
+}
+
+model Notification {
+  id         Int      @id @default(autoincrement())
+  senderId   Int?
+  receiverId Int?
+  title      String   @db.VarChar(255)
+  message    String   @db.LongText
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // // Relasi ke User
+  // sender      User      @relation("Sender", fields: [senderId], references: [id])
+  // receiver    User      @relation("Receiver", fields: [receiverId], references: [id])
+  @@map("notifications")
+}
+
+model AppConfig {
+  id              Int      @id @default(autoincrement())
+  platform        String // Platform: android or ios
+  version         String // Versi aplikasi
+  forceUpdate     Boolean  @default(false) // Apakah user harus update paksa
+  downloadUrl     String? // URL untuk download versi baru
+  maintenanceMode Boolean  @default(false) // Maintenance mode
+  message         String // Pesan untuk user (misal: info update)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("app_config")
+}
+
+model ClubImages {
+  id             BigInt   @id @default(autoincrement()) @db.BigInt
+  club_id        BigInt
+  file_base_url  String   @db.VarChar(100)
+  file_base_path String   @db.VarChar(250)
+  file_path      String   @db.VarChar(100)
+  file_name      String   @db.VarChar(250)
+  file_extention String   @db.VarChar(50)
+  status         Int      @default(1) @db.Int // Default aktif
+  created_by     BigInt   @db.BigInt
+  updated_by     BigInt?  @db.BigInt
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  Club Club @relation(fields: [club_id], references: [id])
+
+  @@map("mobile_club_images")
+}
+
+model Banners {
+  id             Int          @id @default(autoincrement())
+  title          String       @db.VarChar(255)
+  description    String?      @db.Text
+  file_base_url  String       @db.VarChar(100)
+  file_base_path String       @db.VarChar(250)
+  file_path      String       @db.VarChar(100)
+  file_name      String       @db.VarChar(250)
+  file_extention String       @db.VarChar(50)
+  status         BannerStatus @default(ACTIVE)
+  priority       Int          @default(1)
+  startDate      DateTime?
+  end_date       DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@map("mobile_banners")
+}
+
+enum BannerStatus {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
 }
 
 enum UserRole {
