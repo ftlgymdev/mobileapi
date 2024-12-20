@@ -3,23 +3,24 @@ const httpStatus = require('http-status');
 const prisma = require('../client');
 const axios = require('axios');
 const ApiError = require('../utils/ApiError');
+const qs = require('qs');
+
 
 /**
- * Create a token record
+ * Create or update a token for a member
  * @param {number} memberId
  * @param {string} token
+ * @param {Date} expires
  * @returns {Promise<GymMasterToken>}
  */
-const createToken = async (memberId, token, expires) => {
-    const existingToken = await getTokenByMemberId(memberId);
-    if (existingToken) {
-        await deleteTokenByMemberId(memberId);
-    }
-    return prisma.gymMasterToken.create({
-        data: {
+const createOrUpdateToken = async (memberId, token, expires) => {
+    return prisma.gymMasterToken.upsert({
+        where: { member_id: memberId },
+        update: { token, expires },
+        create: {
             member_id: memberId,
             token,
-            expires
+            expires,
         },
     });
 };
@@ -32,6 +33,17 @@ const createToken = async (memberId, token, expires) => {
 const getTokenByMemberId = async (memberId) => {
     return prisma.gymMasterToken.findFirst({
         where: { member_id: memberId },
+    });
+};
+
+/**
+ * Get member ID by token 
+ * @param {string} token
+ * @returns {Promise<GymMasterToken | null>}
+ */
+const getMemberIdByToken = async (token) => {
+    return prisma.gymMasterToken.findFirst({
+        where: { token },
     });
 };
 
@@ -72,7 +84,10 @@ const login = async (params) => {
             const memberId = response.data.result.memberid;
             const token = response.data.result.token;
             const expires = response.data.result.expires;
-            await createToken(memberId, token, expires);
+            await createOrUpdateToken(memberId, token, expires);
+            if (params.email && params.password) {
+                await createOrUpdateMemberPassword(memberId, data.email, data.password);
+            }
             return token;
         } else {
             throw new ApiError(httpStatus.BAD_REQUEST, 'Incorrect email or password, gmaster');
@@ -80,6 +95,25 @@ const login = async (params) => {
     } catch (error) {
         throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error);
     }
+};
+
+/**
+ * Create a decrypt member password
+ * @param {number} memberId
+ * @param {string} email
+ * @param {string} password
+ * @returns {Promise<import('@prisma/client').DecryptPwd>}
+ */
+const createOrUpdateMemberPassword = async (memberId, email, password) => {
+    return prisma.decryptPwd.upsert({
+        where: { email },
+        update: { password },
+        create: {
+            member_id: memberId,
+            email,
+            password,
+        },
+    });
 };
 
 /**
@@ -100,25 +134,35 @@ const getToken = async () => {
  * @param {Object} data
  * @returns {Promise<Object>}
  */
-const post = async (endpoint, headers = {}, data = {}) => {
+const post = async (endpoint, data, headers = {}) => {
     try {
-        data.api_key = process.env.GYMMASTER_API_KEY;
         const response = await axios.post(`${process.env.GYMMASTER_BASE_URL}${endpoint}`, data, { headers });
         return response.data || {};
     } catch (error) {
-        console.error("POST Request Error:", error.message);
-        return { data: [error.message] };
+        if (error.response && error.response.status === 401 && error.response.data.error === 'Expired Token') {
+            let parsedData = {};
+            if (typeof data === 'string') {
+                parsedData = qs.parse(data);
+            } else if (typeof data === 'object') {
+                parsedData = data;
+            }
+            if (parsedData.token) {
+                const gymMasterToken = await getMemberIdByToken(parsedData.token);
+                await login({ memberId: gymMasterToken.member_id });
+                await axios.post(`${process.env.GYMMASTER_BASE_URL}${endpoint}`, data, { headers });
+            }
+        }
+        return { error: error.message };
     }
 };
 
 const get = async (endpoint, data = {}) => {
     try {
-        data.api_key = process.env.GYMMASTER_API_KEY;
         const response = await axios.get(`${process.env.GYMMASTER_BASE_URL}${endpoint}`, { params: data });
         return response.data || {};
     } catch (error) {
         console.error("GET Request Error:", error.message);
-        return { data: [error.message] };
+        return { error: error.message };
     }
 };
 
@@ -136,7 +180,6 @@ const deleteTokenByMemberId = async (memberId) => {
 };
 
 module.exports = {
-    createToken,
     getTokenByMemberId,
     getLatestToken,
     login,

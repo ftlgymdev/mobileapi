@@ -75,7 +75,43 @@ async function main() {
       password: await encryptPassword(process.env.SEED_PASSWORD_2),
     },
   });
-  console.log({ testUser, testUser2 });
+  const testUser3 = await prisma.user.upsert({
+    where: { email: process.env.SEED_EMAIL_3 },
+    update: {},
+    create: {
+      id: BigInt(process.env.SEED_ID_3),
+      member_id: process.env.SEED_MEMBER_ID_3,
+      card_number: process.env.SEED_CARD_NUMBER_3,
+      type: parseInt(process.env.SEED_TYPE_3),
+      first_name: process.env.SEED_FIRST_NAME_3,
+      last_name: process.env.SEED_LAST_NAME_3,
+      dob: new Date(process.env.SEED_DOB_3),
+      gender: parseInt(process.env.SEED_GENDER_3),
+      email: process.env.SEED_EMAIL_3,
+      phone: process.env.SEED_PHONE_3,
+      ktp_number: process.env.SEED_KTP_NUMBER_3,
+      weight: parseInt(process.env.SEED_WEIGHT_3),
+      height: parseInt(process.env.SEED_HEIGHT_3),
+      hobby: process.env.SEED_HOBBY_3,
+      gym_status: parseInt(process.env.SEED_GYM_STATUS_3),
+      gym_brand_id: parseInt(process.env.SEED_GYM_BRAND_ID_3),
+      statement_compliment_status: parseInt(process.env.SEED_STATEMENT_COMPLIMENT_STATUS_3),
+      term_status: parseInt(process.env.SEED_TERM_STATUS_3),
+      address: process.env.SEED_ADDRESS_3,
+      postal_code: process.env.SEED_POSTAL_CODE_3,
+      club_id: parseInt(process.env.SEED_CLUB_ID_3),
+      status: parseInt(process.env.SEED_STATUS_3),
+      approve_status: parseInt(process.env.SEED_APPROVE_STATUS_3),
+      approved_by: process.env.SEED_APPROVED_BY_3,
+      approved_at: new Date(process.env.SEED_APPROVED_AT_3),
+      created_by: process.env.SEED_CREATED_BY,
+      created_at: new Date(process.env.SEED_CREATED_AT_3),
+      updated_at: new Date(process.env.SEED_UPDATED_AT_3),
+      is_email_verified: true,
+      password: await encryptPassword(process.env.SEED_PASSWORD_3),
+    },
+  });
+  console.log({ testUser, testUser2, testUser3 });
 }
 main()
   .then(async () => {

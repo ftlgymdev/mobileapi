@@ -6,7 +6,7 @@ const logger = require('./config/logger');
 let server;
 prisma.$connect().then(() => {
   logger.info('Connected to SQL Database');
-  server = app.listen(config.port, () => {
+  server = app.listen(config.port, config.hostname, () => {
     logger.info(`Listening to port ${config.port}`);
   });
 });

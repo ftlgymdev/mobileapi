@@ -16,6 +16,8 @@ const jwtVerify = async (payload, done) => {
     const user = await prisma.user.findUnique({
       select: {
         id: true,
+        member_id: true,
+        card_number: true,
         email: true,
         first_name: true,
         last_name: true,
