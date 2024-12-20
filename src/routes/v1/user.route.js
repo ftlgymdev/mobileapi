@@ -28,14 +28,15 @@ router
   )
   .get(
     auth("userNotif"),
-    validate(userValidation.getUsersNotif),
+    validate(userValidation.getUsersNotif)
     // [userController.getUsersNotif]
-    () => {
-      console.log("====================================");
-      console.log();
-      console.log("====================================");
-    }
   );
+
+router.route("/profile").get(
+  // auth("getUsers"),
+  // validate(userValidation.getUser),
+  userController.getMember
+);
 
 router
   .route("/:userId")
@@ -44,6 +45,7 @@ router
     validate(userValidation.getUser),
     userController.getUser
   )
+
   .patch(
     auth("manageUsers"),
     validate(userValidation.updateUser),

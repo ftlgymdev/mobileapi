@@ -4,6 +4,7 @@ const ApiError = require("../utils/ApiError");
 const catchAsync = require("../utils/catchAsync");
 const { userService } = require("../services");
 const ApiSuccess = require("../utils/ApiSuccess");
+const db = require("../config/db");
 
 const createUser = catchAsync(async (req, res) => {
   const { email, password, name, role } = req.body;
@@ -53,6 +54,42 @@ const createUserNotif = catchAsync(async (req, res) => {
   new ApiSuccess(res, user, "User created successfully", httpStatus.CREATED);
 });
 
+const getMember = catchAsync(async (req, res) => {
+  console.log("tai", req.query);
+  let date = req.query.id;
+
+  //berdasarkan member.id =1734203603
+  const dataProfile = `SELECT 
+    member.id,
+    member.member_id,
+    member.card_number,
+    CONCAT_WS(' ', member.first_name, member.last_name) AS "member_name",
+    member.dob,
+    member.gender,
+    member.email,
+    member.phone,
+    member.weight,
+    member.height,
+    member.address,
+    club.id AS "club_id",
+    club.name AS "club_name",
+    CONCAT('assets/img/profile/',member_file.file_path,member_file.file_name) AS "member_profile"
+FROM member
+LEFT JOIN club ON club.id = member.club_id
+LEFT JOIN member_file ON member_file.member_id = member.id
+WHERE member.id = ${date}
+   AND member_file.file_type_id = 1
+ORDER BY member.updated_at DESC`;
+  db.query(dataProfile, (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ error: "Error fetching data" });
+    } else {
+      new ApiSuccess(res, results, "Users retrieved successfully");
+    }
+  });
+});
+
 module.exports = {
   createUser,
   getUsers,
@@ -61,4 +98,5 @@ module.exports = {
   deleteUser,
   getUsersNotif,
   createUserNotif,
+  getMember,
 };

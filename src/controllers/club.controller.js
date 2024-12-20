@@ -73,28 +73,6 @@ ORDER BY schedule.updated_at DESC`;
 
   //0 =male 1=female
 
-  //berdasarkan member.id =1734203603
-  const dataProfile = `SELECT 
-    member.id,
-    member.member_id,
-    member.card_number,
-    CONCAT_WS(' ', member.first_name, member.last_name) AS "member_name",
-    member.dob,
-    member.gender,
-    member.email,
-    member.phone,
-    member.weight,
-    member.height,
-    member.address,
-    club.id AS "club_id",
-    club.name AS "club_name",
-    CONCAT('assets/img/profile/',member_file.file_path,member_file.file_name) AS "member_profile"
-FROM member
-LEFT JOIN club ON club.id = member.club_id
-LEFT JOIN member_file ON member_file.member_id = member.id
-WHERE member.id = 1734203603
-   AND member_file.file_type_id = 1
-ORDER BY member.updated_at DESC`;
   // const results = db.query(query); // Hasil query
   // console.log({ results });
   db.query(getClub, (err, results) => {
