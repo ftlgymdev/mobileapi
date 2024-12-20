@@ -44,8 +44,8 @@ const queryClubs = async (
   options,
   keys = ["id", "name", "city_id", "created_at", "updated_at"]
 ) => {
-  const page = options.page ?? 1;
-  const limit = options.limit ?? 10;
+  const page = Number(options.page) ?? 1;
+  const limit = Number(options.limit) ?? 10;
   const sortBy = options.sortBy;
   const sortType = options.sortType ?? "desc";
 

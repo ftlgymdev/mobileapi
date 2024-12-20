@@ -1,0 +1,20 @@
+//get package
+select package_group.id as "package_group_id" , package_group.title AS "package_group_title", package.id , package.membership_type_id , package.title , package.duration, package.price 
+FROM package 
+JOIN package_group on package_group.id = package.package_group_id WHERE package_group.id = 511 LIMIT 100
+
+// get pt
+SELECT user.*, club.name club_name, user_role.role_id, CONCAT_WS("",user_file.file_path, user_file.file_name) as user_image
+FROM user
+LEFT JOIN user_role ON user_role.user_id = user.id
+LEFT JOIN user_club ON user_club.user_id = user.id
+LEFT JOIN club ON club.id = user_club.club_id
+LEFT JOIN user_file ON user_file.user_id = user.id AND user_file.file_type_id = 18
+WHERE user.status IN(1, 2, 3, 4, 5, 6)
+AND user_role.role_id IN(11)
+AND club.id = '20'
+AND user_club.status = 1
+GROUP BY user_club.user_id
+ORDER BY user.first_name ASC
+ LIMIT 1000
+
