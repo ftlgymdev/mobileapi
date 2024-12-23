@@ -55,8 +55,8 @@ const createUserNotif = catchAsync(async (req, res) => {
 });
 
 const getMember = catchAsync(async (req, res) => {
-  console.log("tai", req.query);
-  let date = req.query.id;
+  console.log("tai", req.user.id);
+  let date = req.user.id;
 
   //berdasarkan member.id =1734203603
   const dataProfile = `SELECT 

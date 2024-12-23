@@ -33,7 +33,7 @@ router
   );
 
 router.route("/profile").get(
-  // auth("getUsers"),
+  auth("getUsers"),
   // validate(userValidation.getUser),
   userController.getMember
 );

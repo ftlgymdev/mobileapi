@@ -8,6 +8,7 @@ const notifController = require("./notif.controller");
 const configController = require("./config.controller");
 const fcmController = require("./fcm.controller");
 const checkinController = require("./checkin.controller");
+const trainerController = require("./trainer.controller");
 
 module.exports = {
   authController,
@@ -20,4 +21,5 @@ module.exports = {
   configController,
   fcmController,
   checkinController,
+  trainerController,
 };

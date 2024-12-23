@@ -11,6 +11,7 @@ const notifRoute = require("./notif.route");
 const configRoute = require("./config.route");
 const fcmRoute = require("./fcm.route");
 const checkinRoute = require("./checkin.route");
+const trainerRoute = require("./trainer.route");
 
 const router = express.Router();
 
@@ -50,6 +51,11 @@ const defaultRoutes = [
   {
     path: "/checkin",
     route: checkinRoute,
+  },
+
+  {
+    path: "/trainer",
+    route: trainerRoute,
   },
 ];
 

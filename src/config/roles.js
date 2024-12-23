@@ -11,6 +11,7 @@ const allRoles = {
     "creteNotif",
     "getVersi",
     "checkin",
+    "getTrainer",
   ],
   [UserRole.ADMIN]: ["getUsers", "manageUsers"],
 };

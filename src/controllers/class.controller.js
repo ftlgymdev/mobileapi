@@ -16,13 +16,16 @@ const db = require("../config/db");
 const getGxClass = catchAsync(async (req, res) => {
   console.log("tai", req.query?.date);
   let date = req.query?.date;
-
+  let id = req.query.id;
   //schedule.companyid = club id
+
+  console.log({ date, id });
+
   const gxClass = `SELECT schedule.*, category_class.category
 FROM schedule
 JOIN class ON schedule.classid = class.classid
 LEFT JOIN category_class ON class.category_class_id = category_class.id
-WHERE schedule.companyid = '2' AND date(arrival) BETWEEN "${date}" AND "${date}"
+WHERE schedule.companyid = "${id}" AND date(arrival) BETWEEN "${date}" AND "${date}"
 ORDER BY schedule.arrival DESC , schedule.starttime DESC LIMIT 1000`;
 
   db.query(gxClass, (err, results) => {
