@@ -32,20 +32,24 @@ const getClubsss = catchAsync(async (req, res) => {
 });
 
 const getTrainer = catchAsync(async (req, res) => {
-  const getPT = `
-  SELECT user.*, club.name club_name, user_role.role_id, CONCAT_WS("",user_file.file_path, user_file.file_name) as user_image
-  FROM user
-  LEFT JOIN user_role ON user_role.user_id = user.id
-  LEFT JOIN user_club ON user_club.user_id = user.id
-  LEFT JOIN club ON club.id = user_club.club_id
-  LEFT JOIN user_file ON user_file.user_id = user.id AND user_file.file_type_id = 18
-  WHERE user.status IN(1, 2, 3, 4, 5, 6)
-  AND user_role.role_id IN(11)
-  AND club.id = '2'
-  AND user_club.status = 1
-  GROUP BY user_club.user_id
-  ORDER BY user.first_name ASC
-   LIMIT 1000`;
+  let id = req.query.id;
+  const getPT = `SELECT user.*,
+    club.name club_name,
+    user_role.role_id,
+    CONCAT("https://ftlhorizon.com/assets/img/user/profile/", user_file.file_path, user_file.file_name) as user_image
+FROM user
+    LEFT JOIN user_role ON user_role.user_id = user.id
+    LEFT JOIN user_club ON user_club.user_id = user.id
+    LEFT JOIN club ON club.id = user_club.club_id
+    LEFT JOIN user_file ON user_file.user_id = user.id
+    AND user_file.file_type_id = 18
+WHERE user.status IN(1, 2, 3, 4, 5, 6)
+    AND user_role.role_id IN(11)
+    AND club.id = "2"
+    AND user_club.status = 1
+GROUP BY user_club.user_id
+ORDER BY user.first_name ASC
+LIMIT 10`;
 
   //0 =male 1=female
 
