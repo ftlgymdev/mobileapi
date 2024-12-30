@@ -169,7 +169,6 @@ const getUserByEmail = async (
     "updated_at",
   ]
 ) => {
-  console.log({ 'keys': keys });
   return prisma.user.findUnique({
     where: { email },
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),

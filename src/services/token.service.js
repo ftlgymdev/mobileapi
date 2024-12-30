@@ -54,13 +54,11 @@ const saveToken = async (token, userId, expires, type, blacklisted = false) => {
  * @returns {Promise<Token>}
  */
 const verifyToken = async (token, type) => {
-  console.log("deryconsol", { token, type });
-
   const payload = jwt.verify(token, config.jwt.secret);
   const userId = Number(payload.sub);
 
   const tokenData = await prisma.token.findFirst({
-    where: { token, type, userId, blacklisted: false },
+    where: { token, type, user_id: userId, blacklisted: false },
   });
   if (!tokenData) {
     throw new Error("Token not found");

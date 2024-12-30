@@ -6,4 +6,5 @@ module.exports = {
   gymMasterApiService: require("./gymMasterApi.service"),
   clubService: require("./club.service"),
   notifService: require("./notif.service"),
+  userFileService: require("./userFile.service"),
 };

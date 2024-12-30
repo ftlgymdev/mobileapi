@@ -53,6 +53,7 @@ model User {
   sentNotifications     Notification[] @relation("SenderRelation")
   receivedNotifications Notification[] @relation("ReceiverRelation")
   Club                  Club[]
+  UserFile              UserFile[]
 
   @@map("member")
 }
@@ -486,6 +487,30 @@ model Banners {
   updated_at     DateTime     @updatedAt
 
   @@map("mobile_banners")
+}
+
+model UserFile {
+  id             BigInt    @id @default(autoincrement())
+  member_id      BigInt?
+  compliment_id  BigInt?
+  request_id     BigInt
+  payment_id     BigInt?
+  reference_id   BigInt?
+  title          String?   @db.VarChar(225)
+  status         Int?
+  description    String?   @db.VarChar(255)
+  file_type_id   Int?
+  file_base_url  String?   @db.VarChar(256)
+  file_base_path String?   @db.VarChar(256)
+  file_path      String?   @db.VarChar(100)
+  file_name      String?   @db.VarChar(100)
+  file_extention String?   @db.VarChar(100)
+  created_at     DateTime? @default(now())
+  updated_at     DateTime? @updatedAt
+
+  User User? @relation(fields: [member_id], references: [id])
+
+  @@map("member_file")
 }
 
 enum BannerStatus {
