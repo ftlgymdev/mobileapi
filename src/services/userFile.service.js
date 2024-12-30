@@ -9,7 +9,7 @@ const ApiError = require("../utils/ApiError");
  * @returns {Promise<UserFile>}
  */
 const createUserFile = async (member_id, request_id, title, description, file_type_id, file_base_url, file_base_path, file_name, file_extention, status = 1) => {
-    return prisma.UserFile.create({
+    return prisma.userFile.create({
         data: {
             member_id,
             request_id,
@@ -34,7 +34,7 @@ const createUserFile = async (member_id, request_id, title, description, file_ty
 const getUserFileById = async (
     id
 ) => {
-    return prisma.UserFile.findUnique({
+    return prisma.userFile.findUnique({
         where: { id },
     });
 };
@@ -49,7 +49,7 @@ const getUserFileByUserIdAndFileTypeId = async (
     userId,
     fileTypeId,
 ) => {
-    return prisma.UserFile.findFirst({
+    return prisma.userFile.findFirst({
         where: {
             file_type_id: fileTypeId,
             member_id: userId
