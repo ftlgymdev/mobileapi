@@ -8,7 +8,7 @@ const getProfile = catchAsync(async (req, res) => {
     var user = await userService.getUserById(req.user.id);
     const data = {
         id: user.id.toString(),
-        member_id: user.id.toString(),
+        member_id: user.member_id.toString(),
         card_number: user.card_number,
         first_name: user.first_name || "",
         last_name: user.last_name || "",
