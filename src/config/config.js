@@ -40,7 +40,6 @@ if (error) {
 
 module.exports = {
   env: envVars.NODE_ENV,
-  hostname: envVars.HOSTNAME,
   port: envVars.PORT,
   jwt: {
     secret: envVars.JWT_SECRET,

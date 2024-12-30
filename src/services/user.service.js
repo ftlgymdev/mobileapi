@@ -130,14 +130,17 @@ const getUserById = async (
   id,
   keys = [
     "id",
-    "email",
+    "member_id",
+    "card_number",
     "first_name",
     "last_name",
+    "email",
     "password",
     "role",
+    "phone",
     "is_email_verified",
-    "createdAt",
-    "updatedAt",
+    "created_at",
+    "updated_at",
   ]
 ) => {
   return prisma.user.findUnique({

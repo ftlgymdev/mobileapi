@@ -18,7 +18,6 @@ const checkin = catchAsync(async (req, res) => {
     };
     const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
     const door = await gymMasterApiService.post(extractedString, qs.stringify(data), headers);
-    console.log('door ====', door)
     if (door.parameters && door.parameters.doorid) {
         const gymMasterToken = await gymMasterApiService.getTokenByMemberId(memberId);
         const data = {
@@ -28,7 +27,6 @@ const checkin = catchAsync(async (req, res) => {
         };
         const headers = { 'Content-Type': 'application/json' };
         const checkin = await gymMasterApiService.post('/portal/api/v2/member/kiosk/checkin', data, headers);
-        console.log('checkin ====', checkin)
         if (checkin.error === null) {
             new ApiSuccess(res, checkin.result.response, checkin.result.response.message, httpStatus.OK);
         } else {

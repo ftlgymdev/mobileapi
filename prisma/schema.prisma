@@ -42,8 +42,8 @@ model User {
   approved_by                 BigInt?
   approved_at                 DateTime?
   created_by                  BigInt?
-  created_at                  DateTime?
-  updated_at                  DateTime?
+  created_at                  DateTime       @default(now())
+  updated_at                  DateTime       @updatedAt
   is_email_verified           Boolean?       @default(true)
   role                        UserRole       @default(USER)
   password                    String?
@@ -63,16 +63,17 @@ model Token {
   type        TokenType
   expires     DateTime
   blacklisted Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  userId      BigInt
-  user        User      @relation(fields: [userId], references: [id])
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  user_id     BigInt
+  User        User      @relation(fields: [user_id], references: [id])
 }
 
 model Language {
   id            BigInt         @id @default(autoincrement())
   name          String         @unique @db.VarChar(255)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  created_at    DateTime       @default(now())
+  updated_at    DateTime       @updatedAt
   userLanguages UserLanguage[]
 }
 
@@ -80,12 +81,10 @@ model UserLanguage {
   userId     BigInt
   languageId BigInt
   language   Language @relation(fields: [languageId], references: [id])
-  user       User     @relation(fields: [userId], references: [id])
+  User       User     @relation(fields: [userId], references: [id])
 
   @@id([userId, languageId])
 }
-
-//start api ftl
 
 model Staff {
   id                   BigInt    @id @default(autoincrement()) @db.BigInt
@@ -164,9 +163,9 @@ model Transaction {
   approve_status Int?      @default(0)
   approved_by    BigInt?
   approved_at    DateTime?
-  created_at     DateTime?
   updated_by     BigInt?
-  updated_at     DateTime?
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @updatedAt
   from_qios      Int?      @default(0)
 
   @@map("transaction")
@@ -243,9 +242,9 @@ model RequestTransaksi {
   approved_at         DateTime?
   approved_at_2       DateTime?
   approved_at_3       DateTime?
-  created_at          DateTime?
   updated_by          BigInt?
-  updated_at          DateTime?
+  created_at          DateTime  @default(now())
+  updated_at          DateTime  @updatedAt
   external_id         String?
   status_paid         String?
   judul_permintaan    String?
@@ -425,30 +424,29 @@ model DecryptPwd {
 }
 
 model Notification {
-  id         Int      @id @default(autoincrement())
-  senderId   BigInt?
-  receiverId BigInt?
-  title      String   @db.VarChar(255)
-  message    String?  @db.LongText
-  isRead     Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  Sender     User?    @relation("SenderRelation", fields: [senderId], references: [id])
-  Receiver   User?    @relation("ReceiverRelation", fields: [receiverId], references: [id])
+  id          Int      @id @default(autoincrement())
+  sender_id   BigInt?
+  receiver_id BigInt?
+  title       String   @db.VarChar(255)
+  message     String?  @db.LongText
+  is_read     Boolean  @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  Sender      User?    @relation("SenderRelation", fields: [sender_id], references: [id])
+  Receiver    User?    @relation("ReceiverRelation", fields: [receiver_id], references: [id])
 
   @@map("mobile_notifications")
 }
 
 model AppConfig {
-  id              Int      @id @default(autoincrement())
-  platform        String?
-  version         String?
-  forceUpdate     Boolean  @default(false)
-  downloadUrl     String?
-  maintenanceMode Boolean  @default(false)
-  message         String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id           Int      @id @default(autoincrement())
+  platform     String?
+  version      String?
+  force_update Boolean  @default(false)
+  download_url String?
+  message      String
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
 
   @@map("mobile_app_config")
 }
@@ -484,8 +482,8 @@ model Banners {
   priority       Int          @default(1)
   startDate      DateTime?
   end_date       DateTime?
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  created_at     DateTime     @default(now())
+  updated_at     DateTime     @updatedAt
 
   @@map("mobile_banners")
 }

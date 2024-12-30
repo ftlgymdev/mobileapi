@@ -34,8 +34,8 @@ CREATE TABLE `member` (
     `approved_by` BIGINT NULL,
     `approved_at` DATETIME(3) NULL,
     `created_by` BIGINT NULL,
-    `created_at` DATETIME(3) NULL,
-    `updated_at` DATETIME(3) NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
     `is_email_verified` BOOLEAN NULL DEFAULT true,
     `role` ENUM('USER', 'ADMIN') NOT NULL DEFAULT 'USER',
     `password` VARCHAR(191) NULL,
@@ -51,8 +51,9 @@ CREATE TABLE `Token` (
     `type` ENUM('ACCESS', 'REFRESH', 'RESET_PASSWORD', 'VERIFY_EMAIL') NOT NULL,
     `expires` DATETIME(3) NOT NULL,
     `blacklisted` BOOLEAN NOT NULL DEFAULT false,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `userId` BIGINT NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
+    `user_id` BIGINT NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -61,8 +62,8 @@ CREATE TABLE `Token` (
 CREATE TABLE `Language` (
     `id` BIGINT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `Language_name_key`(`name`),
     PRIMARY KEY (`id`)
@@ -156,9 +157,9 @@ CREATE TABLE `transaction` (
     `approve_status` INTEGER NULL DEFAULT 0,
     `approved_by` BIGINT NULL,
     `approved_at` DATETIME(3) NULL,
-    `created_at` DATETIME(3) NULL,
     `updated_by` BIGINT NULL,
-    `updated_at` DATETIME(3) NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
     `from_qios` INTEGER NULL DEFAULT 0,
 
     PRIMARY KEY (`id`)
@@ -235,9 +236,9 @@ CREATE TABLE `request_transaksi` (
     `approved_at` DATETIME(3) NULL,
     `approved_at_2` DATETIME(3) NULL,
     `approved_at_3` DATETIME(3) NULL,
-    `created_at` DATETIME(3) NULL,
     `updated_by` BIGINT NULL,
-    `updated_at` DATETIME(3) NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
     `external_id` VARCHAR(191) NULL,
     `status_paid` VARCHAR(191) NULL,
     `judul_permintaan` VARCHAR(191) NULL,
@@ -425,13 +426,13 @@ CREATE TABLE `decrypt_memberpwd` (
 -- CreateTable
 CREATE TABLE `mobile_notifications` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `senderId` BIGINT NULL,
-    `receiverId` BIGINT NULL,
+    `sender_id` BIGINT NULL,
+    `receiver_id` BIGINT NULL,
     `title` VARCHAR(255) NOT NULL,
     `message` LONGTEXT NULL,
-    `isRead` BOOLEAN NOT NULL DEFAULT false,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
+    `is_read` BOOLEAN NOT NULL DEFAULT false,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -441,12 +442,11 @@ CREATE TABLE `mobile_app_config` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `platform` VARCHAR(191) NULL,
     `version` VARCHAR(191) NULL,
-    `forceUpdate` BOOLEAN NOT NULL DEFAULT false,
-    `downloadUrl` VARCHAR(191) NULL,
-    `maintenanceMode` BOOLEAN NOT NULL DEFAULT false,
+    `force_update` BOOLEAN NOT NULL DEFAULT false,
+    `download_url` VARCHAR(191) NULL,
     `message` VARCHAR(191) NOT NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -483,8 +483,8 @@ CREATE TABLE `mobile_banners` (
     `priority` INTEGER NOT NULL DEFAULT 1,
     `startDate` DATETIME(3) NULL,
     `end_date` DATETIME(3) NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -499,7 +499,7 @@ CREATE TABLE `_ClubToUser` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `Token` ADD CONSTRAINT `Token_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `member`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Token` ADD CONSTRAINT `Token_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `member`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `UserLanguage` ADD CONSTRAINT `UserLanguage_languageId_fkey` FOREIGN KEY (`languageId`) REFERENCES `Language`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -511,10 +511,10 @@ ALTER TABLE `UserLanguage` ADD CONSTRAINT `UserLanguage_userId_fkey` FOREIGN KEY
 ALTER TABLE `user` ADD CONSTRAINT `user_club_id_fkey` FOREIGN KEY (`club_id`) REFERENCES `club`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `mobile_notifications` ADD CONSTRAINT `mobile_notifications_senderId_fkey` FOREIGN KEY (`senderId`) REFERENCES `member`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `mobile_notifications` ADD CONSTRAINT `mobile_notifications_sender_id_fkey` FOREIGN KEY (`sender_id`) REFERENCES `member`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `mobile_notifications` ADD CONSTRAINT `mobile_notifications_receiverId_fkey` FOREIGN KEY (`receiverId`) REFERENCES `member`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `mobile_notifications` ADD CONSTRAINT `mobile_notifications_receiver_id_fkey` FOREIGN KEY (`receiver_id`) REFERENCES `member`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `mobile_club_images` ADD CONSTRAINT `mobile_club_images_club_id_fkey` FOREIGN KEY (`club_id`) REFERENCES `club`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
