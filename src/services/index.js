@@ -7,4 +7,5 @@ module.exports = {
   clubService: require("./club.service"),
   notifService: require("./notif.service"),
   userFileService: require("./userFile.service"),
+  configService: require("./config.service"),
 };
