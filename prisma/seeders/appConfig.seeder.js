@@ -5,7 +5,6 @@ const create = async () => {
     const appConfig1 = await prisma.appConfig.upsert({
         where: { platform: 'ios' },
         update: {
-            platform: 'ios',
             version: '1.0.0',
             force_update: false,
             download_url: 'https://apps.apple.com/id/app/ftl-gym/id1550542887?l=id',
@@ -23,7 +22,6 @@ const create = async () => {
     const appConfig2 = await prisma.appConfig.upsert({
         where: { platform: 'android' },
         update: {
-            platform: 'android',
             version: '1.0.0',
             force_update: false,
             download_url: 'https://play.google.com/store/apps/details?id=com.treshna.memberportal.fasterthanlight&hl=id',
