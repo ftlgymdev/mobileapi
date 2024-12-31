@@ -441,7 +441,7 @@ model Notification {
 
 model AppConfig {
   id           Int      @id @default(autoincrement())
-  platform     String?  @unique
+  platform     String   @unique
   version      String?
   force_update Boolean  @default(false)
   download_url String?
