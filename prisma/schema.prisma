@@ -289,10 +289,10 @@ model Schedule {
   substitute_staff           String?
   staffid                    BigInt?
   bgcolour                   String?
-  description                String?
+  description                String?   @db.Text
   online_instruction         Int?
   informationlink            String?
-  notes                      String?
+  notes                      String?   @db.Text
   companyid                  BigInt?
   companyname                String?
   allow_skip_payment         Int?
