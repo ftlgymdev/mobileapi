@@ -7,4 +7,4 @@ prisma db seed
 
 on production
 npx prisma migrate deploy
-npx primas generate
+npx prisma generate

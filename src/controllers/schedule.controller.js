@@ -6,8 +6,8 @@ const { scheduleService } = require("../services");
 const ApiSuccess = require("../utils/ApiSuccess");
 
 const getSchedules = catchAsync(async (req, res) => {
-    const filter = pick(req.query, ["classname", "arrival"]);
-    const options = pick(req.query, ["sortBy", "limit", "page"]);
+    const filter = pick(req.query, ["classname", "arrival", , "companyid"]);
+    const options = pick(req.query, ["sortBy", "sortType", "limit", "page"]);
     const result = await scheduleService.querySchedules(filter, options);
     new ApiSuccess(res, result, "Class schedules retrieved successfully");
 });

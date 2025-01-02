@@ -16,6 +16,7 @@ const querySchedules = async (filter, options) => {
   const limit = options.limit ?? 10;
   const sortBy = options.sortBy;
   const sortType = options.sortType ?? "desc";
+  console.log('options', options)
   const schedules = await prisma.schedule.findMany({
     where: filter,
     skip: (page - 1) * limit,
