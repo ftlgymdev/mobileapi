@@ -8,4 +8,5 @@ module.exports = {
   notifService: require("./notif.service"),
   userFileService: require("./userFile.service"),
   configService: require("./config.service"),
+  scheduleService: require("./schedule.service"),
 };

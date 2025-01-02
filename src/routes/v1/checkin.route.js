@@ -6,6 +6,9 @@ const router = express.Router();
 
 router
     .route('/')
-    .post(auth('checkin'), [checkinController.checkin]);
+    .post(
+        auth('checkin'),
+        [checkinController.checkin]
+    );
 
 module.exports = router;

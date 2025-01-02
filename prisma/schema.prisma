@@ -257,11 +257,11 @@ model RequestTransaksi {
 model Schedule {
   id                         BigInt    @id
   classid                    BigInt?
-  arrival                    DateTime?
-  starttime                  DateTime?
-  endtime                    DateTime?
-  start_str                  DateTime?
-  end_str                    DateTime?
+  arrival                    String?
+  starttime                  String?
+  endtime                    String?
+  start_str                  String?
+  end_str                    String?
   resourceid                 BigInt?
   location                   String?
   price                      BigInt?

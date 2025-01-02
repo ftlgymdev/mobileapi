@@ -9,6 +9,7 @@ const notifRoute = require("./notif.route");
 const configRoute = require("./config.route");
 const fcmRoute = require("./fcm.route");
 const checkinRoute = require("./checkin.route");
+const scheduleRoute = require("./schedule.route");
 
 const router = express.Router();
 
@@ -45,6 +46,10 @@ const defaultRoutes = [
     path: "/checkin",
     route: checkinRoute,
   },
+  {
+    path: "/class-schedules",
+    route: scheduleRoute,
+  }
 ];
 
 // routes available only in development mode
