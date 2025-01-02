@@ -320,7 +320,7 @@ model Schedule {
   single_guest_addonfee      String?
   multiple_guest_addonfee    String?
   layout                     String?
-  description_html           String?
+  description_html           String?   @db.Text
   image                      String?
   availability               String?
   dayofweek                  String?
