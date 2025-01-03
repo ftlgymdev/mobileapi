@@ -29,5 +29,4 @@ router
         scheduleController.getSchedule
     )
 
-
 module.exports = router;

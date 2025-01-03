@@ -1,15 +1,25 @@
-const express = require("express");
-const auth = require("../../middlewares/auth");
-const {
-  profileController,
-  userController,
-  clubController,
-} = require("../../controllers");
-const validate = require("../../middlewares/validate");
-// const { getClub } = require("../../controllers/club.controller");
+const express = require('express');
+const auth = require('../../middlewares/auth');
+const validate = require('../../middlewares/validate');
+const { clubController } = require('../../controllers');
+const { clubValidation } = require('../../validations');
 
 const router = express.Router();
 
-router.route("/").get(auth("getClubs"), [clubController.getClub]);
+router
+  .route('/')
+  .get(
+    auth('getClubs'),
+    validate(clubValidation.getClubs),
+    clubController.getClubs
+  );
+
+router
+  .route("/:clubId")
+  .get(
+    auth("getClub"),
+    validate(clubValidation.getClub),
+    clubController.getClub
+  )
 
 module.exports = router;

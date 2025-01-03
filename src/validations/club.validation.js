@@ -1,15 +1,15 @@
 const Joi = require("joi");
 
-const getSchedules = {
+const getClubs = {
     query: Joi.object().keys({
-        companyid: Joi.string().required(),
+        name: Joi.string().allow(''),
+        cityId: Joi.string().allow(''),
         search: Joi.object()
             .pattern(
                 Joi.string(),
                 Joi.string().allow('')
             )
             .optional(),
-        arrival: Joi.string().required(),
         sortBy: Joi.string(),
         sortType: Joi.string().allow(''),
         limit: Joi.number().integer(),
@@ -17,13 +17,13 @@ const getSchedules = {
     }),
 };
 
-const getSchedule = {
+const getClub = {
     query: Joi.object().keys({
         id: Joi.number()
     }),
 };
 
 module.exports = {
-    getSchedules,
-    getSchedule
+    getClubs,
+    getClub
 };

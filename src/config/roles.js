@@ -4,6 +4,7 @@ const allRoles = {
   [UserRole.USER]: [
     "getProfile",
     "getClubs",
+    "getClub",
     "getUsers",
     "userNotif",
     "getNotif",

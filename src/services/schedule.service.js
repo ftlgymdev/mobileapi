@@ -4,7 +4,6 @@ const ApiError = require("../utils/ApiError");
 const config = require('../config/config');
 const { generatePagination } = require('./pagination.service');
 
-
 /**
  * Query for classes
  * @param {Object} filter - Prisma filter
@@ -42,7 +41,6 @@ const querySchedules = async (filter, options) => {
     sortBy,
     sortType,
   };
-  console.log('queryParams', queryParams)
   const pagination = generatePagination({
     totalRecords,
     page,
@@ -55,57 +53,6 @@ const querySchedules = async (filter, options) => {
     ...pagination,
   };
 };
-
-
-
-
-// const querySchedules = async (filter, options) => {
-//   const page = options.page ?? 1;
-//   const limit = options.limit ?? 10;
-//   const sortBy = options.sortBy;
-//   const sortType = options.sortType ?? "desc";
-//   const notInFilter = filter.notInField
-//     ? { [filter.notInField]: { notIn: filter.notInValues ?? [] } }
-//     : {};
-//   const totalRecords = await prisma.schedule.count({
-//     where: {
-//       ...filter,
-//       ...notInFilter,
-//     },
-//   });
-//   const schedules = await prisma.schedule.findMany({
-//     where: {
-//       ...filter,
-//       ...notInFilter,
-//     },
-//     skip: (page - 1) * limit,
-//     take: limit,
-//     orderBy: sortBy ? { [sortBy]: sortType } : undefined,
-//   });
-//   const totalPages = Math.ceil(totalRecords / limit);
-//   const firstPageUrl = `/jobs?page=1`;
-//   const lastPageUrl = `https://api-hrd.ftlgym.com/jobs?page=${totalPages}`;
-//   const prevPageUrl = page > 1 ? `https://api-hrd.ftlgym.com/jobs?page=${page - 1}` : null;
-//   const nextPageUrl = page < totalPages ? `https://api-hrd.ftlgym.com/jobs?page=${page + 1}` : null;
-//   const path = `https://api-hrd.ftlgym.com/jobs`;
-//   const data = {
-//     current_page: page,
-//     data: schedules,
-//     first_page_url: firstPageUrl,
-//     from: (page - 1) * limit + 1,
-//     last_page: totalPages,
-//     last_page_url: lastPageUrl,
-//     next_page_url: nextPageUrl,
-//     path: path,
-//     per_page: limit,
-//     prev_page_url: prevPageUrl,
-//     to: page * limit < totalRecords ? page * limit : totalRecords,
-//     total: totalRecords,
-//   };
-//   return data;
-// };
-
-
 
 /**
  * Get user by id

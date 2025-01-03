@@ -1,16 +1,11 @@
-// const { User, UserRole } = require("@prisma/client");
-// const httpStatus = require("http-status");
-// const { PrismaClient } = require("@prisma/client/extension");
-const { Prisma, PrismaClient } = require("@prisma/client");
-
-// const prisma = require("../client");
-
-const prisma = new PrismaClient();
-// const ApiError = require("../utils/ApiError");
-// const { encryptPassword } = require("../utils/encryption");
+const httpStatus = require("http-status");
+const prisma = require("../client");
+const ApiError = require("../utils/ApiError");
+const config = require('../config/config');
+const { generatePagination } = require('./pagination.service');
 
 /**
- * Query for users
+ * Query for classes
  * @param {Object} filter - Prisma filter
  * @param {Object} options - Query options
  * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
@@ -18,61 +13,57 @@ const prisma = new PrismaClient();
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const quesryClubs = async (
-  filter,
-  options,
-  keys = ["id", "name", "city_id", "created_at", "updated_at"]
-) => {
+const queryClubs = async (filter, options) => {
   const page = options.page ?? 1;
   const limit = options.limit ?? 10;
   const sortBy = options.sortBy;
   const sortType = options.sortType ?? "desc";
-  const clubs = await prisma.club.findMany();
-
-  const users = await prisma.club.findMany({
-    where: filter,
-    select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
-    skip: (page - 1) * limit, // Corrected to (page - 1) * limit
-    take: limit,
-    orderBy: sortBy ? { [sortBy]: sortType } : undefined,
-  });
-  return users;
-};
-
-const queryClubs = async (
-  filter,
-  options,
-  keys = ["id", "name", "city_id", "created_at", "updated_at"]
-) => {
-  const page = options.page ?? 1;
-  const limit = options.limit ?? 10;
-  const sortBy = options.sortBy;
-  const sortType = options.sortType ?? "desc";
-
-  // Generate Prisma where condition
-  const where = {};
-  if (filter.name) {
-    where.name = { contains: filter.name }; // Case-insensitive search
-  }
-  //   const datasas = keys.reduce((obj, k) => ({ ...obj, [k]: true }), {});
-  //   const apatu = {
-  //     id: true,
-  //     name: true,
-  //     city_id: false,
-  //     created_at: true,
-  //     updated_at: true,
-  //   };
-
+  const search = filter.search || {};
+  const where = {
+    city_id: filter.cityId ? parseInt(filter.cityId, 10) : undefined,
+    ...(search.name && {
+      name: { contains: search.name.toLowerCase() },
+    })
+  };
+  console.log('where', where)
+  const totalRecords = await prisma.club.count({ where });
   const clubs = await prisma.club.findMany({
-    where, // Use generated where condition
-    // select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
-    // select: datasas,
+    where,
     skip: (page - 1) * limit,
     take: limit,
     orderBy: sortBy ? { [sortBy]: sortType } : undefined,
   });
-  return clubs;
+  const queryParams = {
+    ...filter,
+    sortBy,
+    sortType,
+  };
+  const pagination = generatePagination({
+    totalRecords,
+    page,
+    limit,
+    path: `${config.app.url}/v1/clubs`,
+    queryParams,
+  });
+  return {
+    data: clubs,
+    ...pagination,
+  };
 };
+
+/**
+ * Get user by id
+ * @param {ObjectId} id
+ * @param {Array<Key>} keys
+ * @returns {Promise<Pick<Club, Key> | null>}
+ */
+const getClubById = async (id) => {
+  return prisma.club.findUnique({
+    where: { id }
+  });
+};
+
 module.exports = {
   queryClubs,
+  getClubById
 };
