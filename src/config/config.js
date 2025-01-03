@@ -39,6 +39,9 @@ if (error) {
 }
 
 module.exports = {
+  app: {
+    url: envVars.APP_URL
+  },
   env: envVars.NODE_ENV,
   port: envVars.PORT,
   jwt: {
