@@ -3,6 +3,8 @@ const prisma = require("../client");
 const ApiError = require("../utils/ApiError");
 const config = require('../config/config');
 const { generatePagination } = require('./pagination.service');
+
+
 /**
  * Query for classes
  * @param {Object} filter - Prisma filter
@@ -17,32 +19,44 @@ const querySchedules = async (filter, options) => {
   const limit = options.limit ?? 10;
   const sortBy = options.sortBy;
   const sortType = options.sortType ?? "desc";
-  const totalRecords = await prisma.schedule.count({ where: filter });
+  const search = filter.search || {};
+  const where = {
+    companyid: filter.companyid ? parseInt(filter.companyid, 10) : undefined,
+    arrival: filter.arrival ? filter.arrival : undefined,
+    ...(search.classname && {
+      classname: { contains: search.classname.toLowerCase() },
+    }),
+    ...(search.location && {
+      location: { contains: search.location.toLowerCase() },
+    }),
+  };
+  const totalRecords = await prisma.schedule.count({ where });
   const schedules = await prisma.schedule.findMany({
-    where: filter,
+    where,
     skip: (page - 1) * limit,
     take: limit,
     orderBy: sortBy ? { [sortBy]: sortType } : undefined,
   });
   const queryParams = {
-    companyid: '1',
-    arrival: '2024-12-31',
-    sortBy: 'title',
-    sortType: 'asc',
+    ...filter,
+    sortBy,
+    sortType,
   };
+  console.log('queryParams', queryParams)
   const pagination = generatePagination({
     totalRecords,
     page,
     limit,
     path: `${config.app.url}/v1/class-schedules`,
-    queryParams
+    queryParams,
   });
-  const data = {
+  return {
     data: schedules,
     ...pagination,
-  }
-  return data;
+  };
 };
+
+
 
 
 // const querySchedules = async (filter, options) => {

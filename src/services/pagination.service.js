@@ -2,10 +2,20 @@ const generatePagination = ({ totalRecords, page, limit, path, queryParams = {} 
     const totalPages = Math.ceil(totalRecords / limit);
     const buildQueryString = (additionalParams = {}) => {
         const mergedParams = { ...queryParams, ...additionalParams };
-        const queryString = Object.entries(mergedParams)
-            .filter(([_, value]) => value !== undefined && value !== null && value !== '')
-            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-            .join('&');
+        const flattenParams = (params) => {
+            const result = [];
+            for (const [key, value] of Object.entries(params)) {
+                if (value && typeof value === 'object' && !Array.isArray(value)) {
+                    for (const [nestedKey, nestedValue] of Object.entries(value)) {
+                        result.push(`${encodeURIComponent(key)}[${encodeURIComponent(nestedKey)}]=${encodeURIComponent(nestedValue)}`);
+                    }
+                } else {
+                    result.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
+                }
+            }
+            return result;
+        };
+        const queryString = flattenParams(mergedParams).join('&');
         return queryString ? `?${queryString}` : '';
     };
     const firstPageUrl = `${path}${buildQueryString({ page: 1 })}`;
@@ -37,13 +47,6 @@ const generatePagination = ({ totalRecords, page, limit, path, queryParams = {} 
         to: Math.min(page * limit, totalRecords),
         total: totalRecords,
     };
-};
-
-const buildQueryString = (params) => {
-    return Object.keys(params)
-        .filter((key) => params[key] !== undefined && params[key] !== null)
-        .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
-        .join("&");
 };
 
 module.exports = { generatePagination };

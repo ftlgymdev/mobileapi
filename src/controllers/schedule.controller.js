@@ -6,8 +6,16 @@ const { scheduleService } = require("../services");
 const ApiSuccess = require("../utils/ApiSuccess");
 
 const getSchedules = catchAsync(async (req, res) => {
-    const filter = pick(req.query, ["classname", "arrival", , "companyid"]);
+    const filter = pick(req.query, ["search", "classname", "arrival", , "companyid"]);
     const options = pick(req.query, ["sortBy", "sortType", "limit", "page"]);
+    const search = req.query.search
+        ? Object.fromEntries(
+            Object.entries(req.query.search).filter(([key, value]) => value !== '' && value != null)
+        )
+        : {};
+    if (Object.keys(search).length > 0) {
+        filter.search = search;
+    }
     const result = await scheduleService.querySchedules(filter, options);
     new ApiSuccess(res, result, "Class schedules retrieved successfully");
 });

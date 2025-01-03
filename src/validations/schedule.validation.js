@@ -3,7 +3,12 @@ const Joi = require("joi");
 const getSchedules = {
     query: Joi.object().keys({
         companyid: Joi.string().required(),
-        classname: Joi.string().allow(''),
+        search: Joi.object()
+            .pattern(
+                Joi.string(),
+                Joi.string().allow('')
+            )
+            .optional(),
         arrival: Joi.string().required(),
         sortBy: Joi.string(),
         sortType: Joi.string().allow(''),
