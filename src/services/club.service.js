@@ -25,7 +25,6 @@ const queryClubs = async (filter, options) => {
       name: { contains: search.name.toLowerCase() },
     })
   };
-  console.log('where', where)
   const totalRecords = await prisma.club.count({ where });
   const clubs = await prisma.club.findMany({
     where,
